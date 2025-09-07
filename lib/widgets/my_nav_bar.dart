@@ -17,16 +17,13 @@ class _MyNavBarState extends State<MyNavBar> {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.eco), label: "Habits"),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.check_circle_outline),
-          label: "To-Do",
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.check_circle), label: "To-Do"),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
       ],
       currentIndex: widget.currentIndex,
       onTap: widget.onTap,
       unselectedItemColor: Colors.black,
-      selectedItemColor: Colors.yellow,
+      selectedItemColor: Colors.blue,
       showSelectedLabels: true,
       showUnselectedLabels: true,
     );
