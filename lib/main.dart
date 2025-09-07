@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:niyama/pages/navigation_page.dart';
+import 'package:niyama/navigation_page.dart';
 
 void main() {
   runApp(const MainApp());

@@ -21,6 +21,8 @@ class _NavigationPageState extends State<NavigationPage> {
     });
   }
 
+  List<String> titles = ["Hello, Sahil", "Habits", "To-Do", "Settings"];
+
   List<Widget> selectedPage = [
     HomePage(),
     HabitPage(),
@@ -36,8 +38,12 @@ class _NavigationPageState extends State<NavigationPage> {
           SliverAppBar(
             pinned: true,
             expandedHeight: 160,
-            flexibleSpace: FlexibleSpaceBar(title: Text("Hello, Sahil!")),
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(titles.elementAt(_selectedIndex)),
+              titlePadding: EdgeInsets.only(left: 16, bottom: 16),
+            ),
           ),
+
           SliverList.list(children: [selectedPage.elementAt(_selectedIndex)]),
         ],
       ),
