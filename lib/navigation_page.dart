@@ -30,6 +30,10 @@ class _NavigationPageState extends State<NavigationPage> {
     SettingsPage(),
   ];
 
+  void addNewToDo() {}
+
+  void addNewHabit() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +51,20 @@ class _NavigationPageState extends State<NavigationPage> {
           SliverList.list(children: [selectedPage.elementAt(_selectedIndex)]),
         ],
       ),
+
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: addNewHabit,
+              tooltip: "New Habit",
+              child: Icon(Icons.add),
+            )
+          : _selectedIndex == 2
+          ? FloatingActionButton(
+              onPressed: addNewToDo,
+              tooltip: "New To-Do",
+              child: Icon(Icons.add),
+            )
+          : null,
 
       bottomNavigationBar: MyNavBar(
         currentIndex: _selectedIndex,

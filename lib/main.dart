@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:niyama/models/habit.dart';
 import 'package:niyama/navigation_page.dart';
+import 'package:niyama/models/boxes.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(HabitAdapter());
+  boxHabit = await Hive.openBox<Habit>('habit');
+
   runApp(const MainApp());
 }
 
