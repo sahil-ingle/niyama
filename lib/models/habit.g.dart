@@ -19,16 +19,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
     return Habit(
       habitName: fields[0] as String,
       description: fields[1] as String,
-      category: fields[2] as String,
+      goalDays: fields[2] as String,
       reminderTime: fields[3] as DateTime,
-      habitFreq: (fields[4] as List).cast<String>(),
-      timeAllocated: fields[5] as double,
-      timeUtilized: fields[6] as double,
+      habitDays: (fields[4] as Map).cast<String, bool>(),
+      timeAllocated: fields[5] as DateTime,
+      timeUtilized: fields[6] as DateTime,
       currentStreak: fields[7] as int,
       longestStreak: fields[8] as int,
-      streakDates: (fields[9] as List)
-          .map((dynamic e) => (e as Map).cast<String, double>())
-          .toList(),
+      streakDates: (fields[9] as Map).cast<String, double>(),
     );
   }
 
@@ -41,11 +39,11 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(1)
       ..write(obj.description)
       ..writeByte(2)
-      ..write(obj.category)
+      ..write(obj.goalDays)
       ..writeByte(3)
       ..write(obj.reminderTime)
       ..writeByte(4)
-      ..write(obj.habitFreq)
+      ..write(obj.habitDays)
       ..writeByte(5)
       ..write(obj.timeAllocated)
       ..writeByte(6)

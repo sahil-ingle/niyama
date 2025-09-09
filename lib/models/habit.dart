@@ -7,9 +7,9 @@ class Habit {
   Habit({
     required this.habitName,
     required this.description,
-    required this.category,
+    required this.goalDays,
     required this.reminderTime,
-    required this.habitFreq,
+    required this.habitDays,
     required this.timeAllocated,
     required this.timeUtilized,
     required this.currentStreak,
@@ -24,19 +24,27 @@ class Habit {
   String description;
 
   @HiveField(2)
-  String category;
+  String goalDays;
 
   @HiveField(3)
   DateTime reminderTime;
 
   @HiveField(4)
-  List<String> habitFreq;
+  Map<String, bool> habitDays = {
+    "MON": false,
+    "TUE": false,
+    "WED": false,
+    "THU": false,
+    "FRI": false,
+    "SAT": false,
+    "SUN": false,
+  };
 
   @HiveField(5)
-  double timeAllocated;
+  DateTime timeAllocated;
 
   @HiveField(6)
-  double timeUtilized;
+  DateTime timeUtilized;
 
   @HiveField(7)
   int currentStreak;
@@ -45,5 +53,5 @@ class Habit {
   int longestStreak;
 
   @HiveField(9)
-  List<Map<String, double>> streakDates;
+  Map<String, double> streakDates;
 }

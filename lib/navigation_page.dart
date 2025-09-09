@@ -3,6 +3,7 @@ import 'package:niyama/pages/habit_page.dart';
 import 'package:niyama/pages/home_page.dart';
 import 'package:niyama/pages/settings_page.dart';
 import 'package:niyama/pages/to_do_page.dart';
+import 'package:niyama/widgets/habit_add_sheet.dart';
 import 'package:niyama/widgets/my_nav_bar.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -32,7 +33,18 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void addNewToDo() {}
 
-  void addNewHabit() {}
+  void addNewHabit() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 52, left: 20, right: 20, top: 52),
+          child: HabitAddSheet(),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
