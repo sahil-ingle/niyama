@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
+import 'package:niyama/widgets/my_text_field.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class HabitAddSheet extends StatefulWidget {
@@ -37,6 +38,14 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _habitNameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -46,31 +55,16 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
         ),
         SizedBox(height: 40),
-        TextField(
-          controller: _habitNameController,
-          decoration: InputDecoration(
-            fillColor: const Color.fromARGB(255, 255, 255, 255),
-            filled: true,
-            hintText: "Habit Title",
 
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
+        MyTextField(
+          nameController: _habitNameController,
+          hintText: "Habit Title",
         ),
         SizedBox(height: 12),
-        TextField(
-          controller: _descriptionController,
-          decoration: InputDecoration(
-            fillColor: const Color.fromARGB(255, 255, 255, 255),
-            filled: true,
-            hintText: "Description",
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
+
+        MyTextField(
+          nameController: _descriptionController,
+          hintText: "Description",
         ),
         SizedBox(height: 12),
 
