@@ -5,6 +5,17 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("home page"));
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          expandedHeight: 160,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text("Hello, Sahil"),
+            titlePadding: EdgeInsets.only(left: 16, bottom: 16),
+          ),
+        ),
+      ],
+    );
   }
 }

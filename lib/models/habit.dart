@@ -15,6 +15,7 @@ class Habit {
     required this.currentStreak,
     required this.longestStreak,
     required this.streakDates,
+    required this.isPositive,
   });
 
   @HiveField(0)
@@ -54,4 +55,7 @@ class Habit {
 
   @HiveField(9)
   Map<String, double> streakDates;
+
+  @HiveField(10)
+  bool isPositive;
 }

@@ -1,128 +1,172 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class MyHabitsCard extends StatefulWidget {
-  const MyHabitsCard({super.key});
+  const MyHabitsCard({
+    required this.habitName,
+    required this.goal,
+    required this.currentStreak,
+    required this.timeAllocated,
+    required this.habitDays,
+    super.key,
+  });
+
+  final String habitName;
+  final String goal;
+  final String currentStreak;
+  final String timeAllocated;
+  final Map<String, bool> habitDays;
 
   @override
   State<MyHabitsCard> createState() => _MyHabitsCardState();
 }
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
-  final List<String> dates = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "10",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-  ];
+  final List<String> dates = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  bool isChecked = false;
+  bool isPlaying = false;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
 
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: ExpansionTile(
-          showTrailingIcon: false,
-          tilePadding: EdgeInsets.all(0),
-          collapsedShape: Border(),
-          shape: Border(),
-          title: Column(
-            children: [
-              Row(
-                children: [
-                  SizedBox(
-                    height: 32,
-                    width: 32,
-                    child: IconButton(
-                      padding: EdgeInsets.all(0),
-                      iconSize: 24,
-                      color: Colors.black,
-                      onPressed: () {},
-                      icon: Icon(Icons.circle_outlined),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Work Out",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 8),
-                  Text("Goal - 2hr"),
-                  Spacer(),
-                  SizedBox(
-                    height: 32,
-                    width: 32,
-                    child: IconButton(
-                      padding: EdgeInsets.all(0),
-                      iconSize: 32,
-                      color: Colors.black,
-                      onPressed: () {},
-                      icon: Icon(Icons.play_arrow_rounded),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Text('🔥', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 8),
-                  Text("7 Days", style: TextStyle(fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Text(
-                    "30 min Time Left",
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
+      child: ExpansionTile(
+        showTrailingIcon: false,
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 
-              LinearPercentIndicator(
-                percent: 0.5,
-                progressColor: Colors.blueAccent,
-                barRadius: Radius.circular(25),
-                padding: EdgeInsets.symmetric(horizontal: 0),
-                lineHeight: 8,
-              ),
-            ],
-          ),
-
+        title: Column(
           children: [
-            SizedBox(height: 8),
-            SizedBox(
-              height: 28,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isChecked = !isChecked;
+                    });
+                  },
+
+                  child: Icon(
+                    isChecked
+                        ? FontAwesome.circle_check_solid
+                        : FontAwesome.circle,
+                    color: Colors.green,
+                    size: 28,
+                  ),
+                ),
+
+                SizedBox(width: 12),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.habitName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      "Goal - ${widget.goal}",
+                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+                Spacer(),
+
+                Text(
+                  "${widget.timeAllocated} hour",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+
+                SizedBox(width: 8),
+
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isPlaying = !isPlaying;
+                    });
+                  },
+                  child: Icon(
+                    isPlaying
+                        ? FontAwesome.circle_pause
+                        : FontAwesome.circle_play,
+                    color: Colors.green,
+                    size: 28,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 12),
+
+            Row(
+              children: [
+                Icon(FontAwesome.fire_solid, color: Colors.orange, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  "${widget.currentStreak} Days",
+                  style: TextStyle(fontSize: 15),
+                ),
+                Spacer(),
+                GestureDetector(
+                  child: Icon(
+                    FontAwesome.chart_simple_solid,
+                    color: Colors.blue,
+                    size: 22,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 12),
+
+            LinearPercentIndicator(
+              barRadius: Radius.circular(16),
+              lineHeight: 12,
+              percent: 0.5,
+              padding: EdgeInsets.all(0),
+              progressColor: Colors.blueAccent,
+              backgroundColor: Colors.grey[300],
+            ),
+          ],
+        ),
+
+        children: [
+          SizedBox(
+            height: 62,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12, left: 12, right: 12),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: dates.length,
                 itemBuilder: (context, index) {
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    margin: EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(12),
                       color: Colors.greenAccent,
                     ),
-                    child: Text(dates[index]),
+                    child: Column(children: [Text(dates[index]), Text("THU")]),
                   );
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

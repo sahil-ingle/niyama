@@ -5,6 +5,17 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("settings page"));
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          expandedHeight: 160,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text("Settings"),
+            titlePadding: EdgeInsets.only(left: 16, bottom: 16),
+          ),
+        ),
+      ],
+    );
   }
 }

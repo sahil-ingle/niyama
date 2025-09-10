@@ -2,9 +2,12 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:niyama/models/habit.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
+
+import 'package:niyama/models/boxes.dart';
 
 class HabitAddSheet extends StatefulWidget {
   const HabitAddSheet({super.key});
@@ -17,7 +20,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
   final _habitNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _timePicked = DateTime(0, 0, 0, 0);
-  String? _selectedGoal;
+  String _selectedGoal = "";
   int _selectedHabitIndex = 0;
   bool isPositive = true;
 
@@ -35,6 +38,47 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
     setState(() {
       _selectedDaysMap[day] = !_selectedDaysMap[day]!;
     });
+  }
+
+  void addDataHive() {
+    if (_habitNameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        _selectedGoal.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Please enter all the data"),
+          content: Text("put all the data"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Close"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      boxHabit.put(
+        'key_${_habitNameController.text}',
+        Habit(
+          habitName: _habitNameController.text,
+          description: _descriptionController.text,
+          goalDays: _selectedGoal,
+          reminderTime: DateTime.now(),
+          habitDays: _selectedDaysMap,
+          timeAllocated: _timePicked,
+          timeUtilized: DateTime.now(),
+          currentStreak: 0,
+          longestStreak: 0,
+          streakDates: {},
+          isPositive: isPositive,
+        ),
+      );
+
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -85,7 +129,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedGoal = value;
+                      _selectedGoal = value!; // addd condition here
                     });
                   },
                   decoration: CustomDropdownDecoration(
@@ -122,7 +166,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
         SizedBox(height: 12),
 
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButton(
               onPressed: () {
@@ -151,33 +195,36 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               ),
             ),
 
-            TimePickerSpinnerPopUp(
-              initTime: _timePicked,
-              minTime: DateTime(0, 0, 0, 0, 15),
-              mode: CupertinoDatePickerMode.time,
+            Expanded(
+              child: TimePickerSpinnerPopUp(
+                initTime: _timePicked,
+                minTime: DateTime(0, 0, 0, 0, 15),
+                mode: CupertinoDatePickerMode.time,
 
-              onChange: (dateTime) {
-                setState(() {
-                  _timePicked = dateTime;
-                });
-              },
+                onChange: (dateTime) {
+                  setState(() {
+                    _timePicked = dateTime;
+                  });
+                },
 
-              timeWidgetBuilder: (dateTime) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 1,
-
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 15,
+                timeWidgetBuilder: (dateTime) {
+                  return SizedBox(
+                    height: 60,
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
 
             FilledButton(
@@ -270,7 +317,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
             backgroundColor: Colors.amber,
             fixedSize: Size(160, 52),
           ),
-          onPressed: () {},
+          onPressed: addDataHive,
           child: Text("Add Habit"),
         ),
       ],

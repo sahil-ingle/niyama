@@ -13,6 +13,7 @@ dependencies:
   flutter_toggle_tab: ^1.5.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  icons_plus: ^5.0.0
   percent_indicator: ^4.2.5
   time_picker_spinner_pop_up: ^2.0.0
 

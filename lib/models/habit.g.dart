@@ -27,6 +27,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       currentStreak: fields[7] as int,
       longestStreak: fields[8] as int,
       streakDates: (fields[9] as Map).cast<String, double>(),
+      isPositive: (fields[10] as bool),
     );
   }
 
@@ -53,7 +54,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(8)
       ..write(obj.longestStreak)
       ..writeByte(9)
-      ..write(obj.streakDates);
+      ..write(obj.streakDates)
+      ..writeByte(10)
+      ..write(obj.isPositive);
   }
 
   @override

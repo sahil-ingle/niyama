@@ -22,8 +22,6 @@ class _NavigationPageState extends State<NavigationPage> {
     });
   }
 
-  List<String> titles = ["Hello, Sahil", "Habits", "To-Do", "Settings"];
-
   List<Widget> selectedPage = [
     HomePage(),
     HabitPage(),
@@ -49,20 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 160,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(titles.elementAt(_selectedIndex)),
-              titlePadding: EdgeInsets.only(left: 16, bottom: 16),
-            ),
-          ),
-
-          SliverList.list(children: [selectedPage.elementAt(_selectedIndex)]),
-        ],
-      ),
+      body: selectedPage[_selectedIndex],
 
       floatingActionButton: _selectedIndex == 1
           ? FloatingActionButton(
