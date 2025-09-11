@@ -29,7 +29,7 @@ class _HabitPageState extends State<HabitPage> {
           valueListenable: boxHabit.listenable(),
           builder: (context, boxHabit, widget) {
             if (boxHabit.length <= 0) {
-              return SliverList.list(children: [Text("No data")]);
+              return SliverList.list(children: [Text("No Data")]);
             } else {
               return SliverList.builder(
                 itemCount: boxHabit.length,
