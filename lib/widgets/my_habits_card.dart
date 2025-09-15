@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -9,23 +10,31 @@ class MyHabitsCard extends StatefulWidget {
     required this.currentStreak,
     required this.timeAllocated,
     required this.habitDays,
+    required this.isChecked,
+    required this.btnChecked,
+    required this.percent,
+    required this.streakDates,
     super.key,
   });
 
   final String habitName;
-  final String goal;
+  final int goal;
   final String currentStreak;
-  final String timeAllocated;
+  final DateTime timeAllocated;
   final Map<String, bool> habitDays;
+  final bool isChecked;
+  final double percent;
+  final Map<String, double> streakDates;
+
+  final Function() btnChecked;
 
   @override
   State<MyHabitsCard> createState() => _MyHabitsCardState();
 }
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
-  final List<String> dates = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  bool isChecked = false;
   bool isPlaying = false;
+  final List<DateTime> dates = [DateTime.now()];
 
   @override
   Widget build(BuildContext context) {
@@ -48,18 +57,14 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isChecked = !isChecked;
-                    });
-                  },
+                  onTap: widget.btnChecked,
 
                   child: Icon(
-                    isChecked
+                    widget.isChecked
                         ? FontAwesome.circle_check_solid
                         : FontAwesome.circle,
                     color: Colors.green,
-                    size: 28,
+                    size: 26,
                   ),
                 ),
 
@@ -76,7 +81,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                       ),
                     ),
                     Text(
-                      "Goal - ${widget.goal}",
+                      "Goal - ${widget.goal} Days",
                       style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                     ),
                   ],
@@ -84,7 +89,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 Spacer(),
 
                 Text(
-                  "${widget.timeAllocated} hour",
+                  "${widget.timeAllocated.hour} Hr ${widget.timeAllocated.minute} Min",
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -136,7 +141,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
             LinearPercentIndicator(
               barRadius: Radius.circular(16),
               lineHeight: 12,
-              percent: 0.5,
+              percent: widget.percent,
               padding: EdgeInsets.all(0),
               progressColor: Colors.blueAccent,
               backgroundColor: Colors.grey[300],
@@ -153,14 +158,19 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 scrollDirection: Axis.horizontal,
                 itemCount: dates.length,
                 itemBuilder: (context, index) {
+                  String date = DateFormat('dd').format(dates[index]);
+                  String day = DateFormat(
+                    'EEE',
+                  ).format(dates[index]).toUpperCase();
+
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     margin: EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.greenAccent,
+                      color: Colors.grey,
                     ),
-                    child: Column(children: [Text(dates[index]), Text("THU")]),
+                    child: Column(children: [Text(date), Text(day)]),
                   );
                 },
               ),

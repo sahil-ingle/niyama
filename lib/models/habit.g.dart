@@ -19,7 +19,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
     return Habit(
       habitName: fields[0] as String,
       description: fields[1] as String,
-      goalDays: fields[2] as String,
+      goalDays: fields[2] as int,
       reminderTime: fields[3] as DateTime,
       habitDays: (fields[4] as Map).cast<String, bool>(),
       timeAllocated: fields[5] as DateTime,
@@ -28,13 +28,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       longestStreak: fields[8] as int,
       streakDates: (fields[9] as Map).cast<String, double>(),
       isPositive: (fields[10] as bool),
+      isCompleted: (fields[11] as bool),
     );
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.habitName)
       ..writeByte(1)
@@ -56,7 +57,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(9)
       ..write(obj.streakDates)
       ..writeByte(10)
-      ..write(obj.isPositive);
+      ..write(obj.isPositive)
+      ..writeByte(11)
+      ..write(obj.isCompleted);
   }
 
   @override

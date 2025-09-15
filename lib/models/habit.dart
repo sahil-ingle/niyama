@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'habit.g.dart';
 
 @HiveType(typeId: 1)
-class Habit {
+class Habit extends HiveObject {
   Habit({
     required this.habitName,
     required this.description,
@@ -16,6 +16,7 @@ class Habit {
     required this.longestStreak,
     required this.streakDates,
     required this.isPositive,
+    required this.isCompleted,
   });
 
   @HiveField(0)
@@ -25,7 +26,7 @@ class Habit {
   String description;
 
   @HiveField(2)
-  String goalDays;
+  int goalDays;
 
   @HiveField(3)
   DateTime reminderTime;
@@ -58,4 +59,7 @@ class Habit {
 
   @HiveField(10)
   bool isPositive;
+
+  @HiveField(11)
+  bool isCompleted = false;
 }

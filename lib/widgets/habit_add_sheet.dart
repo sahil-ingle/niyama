@@ -20,7 +20,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
   final _habitNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _timePicked = DateTime(0, 0, 0, 0);
-  String _selectedGoal = "";
+  int _selectedGoal = 0;
   int _selectedHabitIndex = 0;
   bool isPositive = true;
 
@@ -43,7 +43,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
   void addDataHive() {
     if (_habitNameController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
-        _selectedGoal.isEmpty) {
+        _selectedGoal == 0) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -74,6 +74,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           longestStreak: 0,
           streakDates: {},
           isPositive: isPositive,
+          isCompleted: false,
         ),
       );
 
@@ -83,7 +84,6 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _habitNameController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -129,7 +129,9 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedGoal = value!; // addd condition here
+                      _selectedGoal = int.parse(
+                        value!.split(" ")[0],
+                      ); // addd condition here
                     });
                   },
                   decoration: CustomDropdownDecoration(

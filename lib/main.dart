@@ -9,6 +9,8 @@ void main() async {
   Hive.registerAdapter(HabitAdapter());
   boxHabit = await Hive.openBox<Habit>('habit');
 
+  await Hive.openBox<String>('dateBox');
+
   runApp(const MainApp());
 }
 
