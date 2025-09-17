@@ -26,7 +26,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       timeUtilized: fields[6] as int,
       currentStreak: fields[7] as int,
       longestStreak: fields[8] as int,
-      streakDates: (fields[9] as Map).cast<String, double>(),
+      streakDates: (fields[9] as Map).cast<String, int>(),
       isPositive: (fields[10] as bool),
       isCompleted: (fields[11] as bool),
     );

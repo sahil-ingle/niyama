@@ -55,7 +55,7 @@ class Habit extends HiveObject {
   int longestStreak;
 
   @HiveField(9)
-  Map<String, double> streakDates;
+  Map<String, int> streakDates;
 
   @HiveField(10)
   bool isPositive;

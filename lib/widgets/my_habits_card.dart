@@ -30,7 +30,7 @@ class MyHabitsCard extends StatefulWidget {
   final Map<String, bool> habitDays;
   final bool isChecked;
   final double percent;
-  final Map<String, double> streakDates;
+  final Map<String, int> streakDates;
   final int habitIndex;
 
   final Function() btnChecked;

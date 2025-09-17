@@ -57,7 +57,7 @@ class _HabitPageState extends State<HabitPage> {
     }
   }
 
-  void increaseDayCount(int index, double time) {
+  void increaseDayCount(int index, int time) {
     Habit myHabit = boxHabit.getAt(index);
 
     DateTime today = DateTime.now();
@@ -112,7 +112,7 @@ class _HabitPageState extends State<HabitPage> {
                       btnChecked: () {
                         setState(() {
                           myHabit.isCompleted = !myHabit.isCompleted;
-                          increaseDayCount(index, 2);
+                          increaseDayCount(index, myHabit.timeUtilized);
                         });
                       },
                       percent: myHabit.currentStreak / myHabit.goalDays,
