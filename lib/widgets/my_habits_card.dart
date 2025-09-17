@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:niyama/models/boxes.dart';
+import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -15,17 +19,19 @@ class MyHabitsCard extends StatefulWidget {
     required this.btnChecked,
     required this.percent,
     required this.streakDates,
+    required this.habitIndex,
     super.key,
   });
 
   final String habitName;
   final int goal;
   final String currentStreak;
-  final DateTime timeAllocated;
+  final int timeAllocated;
   final Map<String, bool> habitDays;
   final bool isChecked;
   final double percent;
   final Map<String, double> streakDates;
+  final int habitIndex;
 
   final Function() btnChecked;
 
@@ -34,48 +40,58 @@ class MyHabitsCard extends StatefulWidget {
 }
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
-  bool isPlaying = false;
-  late List<DateTime> dates;
-
-  final ScrollController _scrollController = ScrollController();
-
-  // Define item width (must include margin/padding if you use them)
-  final double itemWidth = 116; // 100 width + 16 margin (8 left + 8 right)
+  late int _seconds;
+  bool _isPaused = false;
+  Timer? _timer;
+  late Habit myHabit;
+  late int _timeUtilized;
 
   @override
   void initState() {
     super.initState();
+    myHabit = boxHabit.getAt(widget.habitIndex);
+    _seconds = widget.timeAllocated;
+    _timeUtilized = myHabit.timeUtilized;
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      int targetIndex = 15;
-
-      double screenWidth = MediaQuery.of(context).size.width;
-      double offset =
-          (itemWidth * targetIndex) - (screenWidth / 2) + (itemWidth / 2);
-
-      if (offset < 0) offset = 0;
-
-      _scrollController.jumpTo(offset);
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_seconds > 0) {
+        setState(() {
+          _seconds--;
+          _timeUtilized++;
+        });
+      } else {
+        myHabit.isCompleted = true;
+        _timer?.cancel();
+      }
+      myHabit.timeUtilized = _timeUtilized;
+      myHabit.timeAllocated = _seconds;
+      myHabit.save();
+    });
+    setState(() {
+      _isPaused = false;
     });
   }
 
-  List<DateTime> datesGenerator() {
-    List<DateTime> dates = [];
+  void _pauseTimer() {
+    _timer?.cancel();
+    setState(() => _isPaused = true);
+    myHabit.timeUtilized = _timeUtilized;
+    myHabit.timeAllocated = _seconds;
+    myHabit.save();
+  }
 
-    DateTime start = DateTime.now().subtract(Duration(days: 30));
-
-    for (int i = 0; i < 60; i++) {
-      dates.add(start);
-      start = start.add(Duration(days: 1));
-    }
-
-    return dates;
+  String _formatTime(int seconds) {
+    final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$secs";
   }
 
   @override
   Widget build(BuildContext context) {
-    dates = datesGenerator();
-
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -127,9 +143,9 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 Spacer(),
 
                 Text(
-                  "${widget.timeAllocated.hour} Hr ${widget.timeAllocated.minute} Min",
+                  _formatTime(_seconds),
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Colors.grey.shade800,
                   ),
@@ -140,11 +156,16 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      isPlaying = !isPlaying;
+                      if (!_isPaused) {
+                        _startTimer();
+                      } else {
+                        _pauseTimer();
+                      }
+                      _isPaused = !_isPaused;
                     });
                   },
                   child: Icon(
-                    isPlaying
+                    _isPaused
                         ? FontAwesome.circle_pause
                         : FontAwesome.circle_play,
                     color: Colors.green,
@@ -189,6 +210,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
         children: [
           TableCalendar(
+            startingDayOfWeek: StartingDayOfWeek.monday,
             calendarFormat: CalendarFormat.week,
             headerVisible: false,
             firstDay: DateTime.utc(2010, 10, 16),

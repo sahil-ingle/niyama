@@ -43,10 +43,10 @@ class Habit extends HiveObject {
   };
 
   @HiveField(5)
-  DateTime timeAllocated;
+  int timeAllocated; // saved as seconds
 
   @HiveField(6)
-  DateTime timeUtilized;
+  int timeUtilized; // saved as seconds
 
   @HiveField(7)
   int currentStreak;

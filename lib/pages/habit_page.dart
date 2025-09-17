@@ -117,6 +117,7 @@ class _HabitPageState extends State<HabitPage> {
                       },
                       percent: myHabit.currentStreak / myHabit.goalDays,
                       streakDates: myHabit.streakDates,
+                      habitIndex: index,
                     ),
                   );
                 },
