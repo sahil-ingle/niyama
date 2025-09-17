@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class MyHabitsCard extends StatefulWidget {
   const MyHabitsCard({
@@ -34,10 +35,47 @@ class MyHabitsCard extends StatefulWidget {
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
   bool isPlaying = false;
-  final List<DateTime> dates = [DateTime.now()];
+  late List<DateTime> dates;
+
+  final ScrollController _scrollController = ScrollController();
+
+  // Define item width (must include margin/padding if you use them)
+  final double itemWidth = 116; // 100 width + 16 margin (8 left + 8 right)
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      int targetIndex = 15;
+
+      double screenWidth = MediaQuery.of(context).size.width;
+      double offset =
+          (itemWidth * targetIndex) - (screenWidth / 2) + (itemWidth / 2);
+
+      if (offset < 0) offset = 0;
+
+      _scrollController.jumpTo(offset);
+    });
+  }
+
+  List<DateTime> datesGenerator() {
+    List<DateTime> dates = [];
+
+    DateTime start = DateTime.now().subtract(Duration(days: 30));
+
+    for (int i = 0; i < 60; i++) {
+      dates.add(start);
+      start = start.add(Duration(days: 1));
+    }
+
+    return dates;
+  }
 
   @override
   Widget build(BuildContext context) {
+    dates = datesGenerator();
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -50,7 +88,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-
+        childrenPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Column(
           children: [
             Row(
@@ -150,29 +188,27 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
         ),
 
         children: [
-          SizedBox(
-            height: 62,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 12, left: 12, right: 12),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: dates.length,
-                itemBuilder: (context, index) {
-                  String date = DateFormat('dd').format(dates[index]);
-                  String day = DateFormat(
-                    'EEE',
-                  ).format(dates[index]).toUpperCase();
+          TableCalendar(
+            calendarFormat: CalendarFormat.week,
+            headerVisible: false,
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: DateTime.now(),
 
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.grey,
-                    ),
-                    child: Column(children: [Text(date), Text(day)]),
-                  );
-                },
+            // highlight if the day exists in streakDates
+            selectedDayPredicate: (day) {
+              final dateKey = DateFormat('dd-MM-yyyy').format(day);
+              return widget.streakDates.containsKey(dateKey);
+            },
+
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
