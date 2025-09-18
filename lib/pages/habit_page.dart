@@ -78,10 +78,14 @@ class _HabitPageState extends State<HabitPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           pinned: true,
           expandedHeight: 160,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text("Habits"),
+            title: Text(
+              "Habits",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
         ),

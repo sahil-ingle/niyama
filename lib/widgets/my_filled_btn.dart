@@ -18,9 +18,24 @@ class MyFilledBtn extends StatelessWidget {
       onPressed: onTap,
 
       style: FilledButton.styleFrom(
-        backgroundColor: isSelected ? Colors.blue : Colors.grey,
+        backgroundColor: isSelected
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.surface,
+
+        shape: RoundedRectangleBorder(
+          borderRadius: isSelected
+              ? BorderRadiusGeometry.circular(12)
+              : BorderRadiusGeometry.circular(40),
+        ),
       ),
-      child: Text(day),
+      child: Text(
+        day,
+        style: TextStyle(
+          color: isSelected
+              ? Theme.of(context).colorScheme.onSecondary
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
     );
   }
 }

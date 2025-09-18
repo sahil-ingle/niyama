@@ -22,8 +22,9 @@ class _MyNavBarState extends State<MyNavBar> {
       ],
       currentIndex: widget.currentIndex,
       onTap: widget.onTap,
-      unselectedItemColor: Colors.black,
-      selectedItemColor: Colors.blue,
+      unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+      selectedItemColor: Theme.of(context).colorScheme.primary,
+
       showSelectedLabels: true,
       showUnselectedLabels: true,
     );

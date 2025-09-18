@@ -35,6 +35,8 @@ class _NavigationPageState extends State<NavigationPage> {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       builder: (ctx) {
         return Padding(
           padding: EdgeInsets.only(bottom: 52, left: 20, right: 20, top: 52),
@@ -59,7 +61,10 @@ class _NavigationPageState extends State<NavigationPage> {
           ? FloatingActionButton(
               onPressed: addNewToDo,
               tooltip: "New To-Do",
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             )
           : null,
 

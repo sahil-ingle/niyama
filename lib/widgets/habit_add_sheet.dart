@@ -100,7 +100,11 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
       children: [
         Text(
           "Add New Habit",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         SizedBox(height: 40),
 
@@ -124,6 +128,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               child: Center(
                 child: CustomDropdown(
                   hintText: "Goal",
+
                   items: [
                     '7 days',
                     '21 days',
@@ -140,6 +145,20 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                   },
                   decoration: CustomDropdownDecoration(
                     closedBorderRadius: BorderRadius.circular(16),
+                    closedFillColor: Theme.of(context).colorScheme.surface,
+                    expandedFillColor: Theme.of(context).colorScheme.surface,
+                    hintStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 16,
+                    ),
+                    headerStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 16,
+                    ),
+                    listItemStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -152,11 +171,23 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                 width: 48,
                 borderRadius: 16,
                 height: 54,
-                selectedBackgroundColors: [Colors.amber],
+                selectedBackgroundColors: [
+                  Theme.of(context).colorScheme.primary,
+                ],
                 dataTabs: [
                   DataTab(title: "Positive"),
                   DataTab(title: "Negative"),
                 ],
+                selectedTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                unSelectedBackgroundColors: [
+                  Theme.of(context).colorScheme.surface,
+                ],
+                unSelectedTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+
                 selectedLabelIndex: (index) {
                   setState(() {
                     _selectedHabitIndex = index;
@@ -182,8 +213,8 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               },
 
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                iconColor: Colors.black,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 elevation: 1,
 
                 shape: RoundedRectangleBorder(
@@ -217,7 +248,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                   return SizedBox(
                     height: 60,
                     child: Card(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       elevation: 1,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(8),
@@ -225,6 +256,9 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                       child: Center(
                         child: Text(
                           '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ),
@@ -241,8 +275,8 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               },
 
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                iconColor: Colors.black,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 elevation: 1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadiusGeometry.only(
@@ -320,11 +354,18 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
 
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.amber,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             fixedSize: Size(160, 52),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.circular(20),
+            ),
           ),
+
           onPressed: addDataHive,
-          child: Text("Add Habit"),
+          child: Text(
+            "Add Habit",
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          ),
         ),
       ],
     );

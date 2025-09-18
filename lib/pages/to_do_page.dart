@@ -10,8 +10,12 @@ class ToDoPage extends StatelessWidget {
         SliverAppBar(
           pinned: true,
           expandedHeight: 160,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text("To-Do"),
+            title: Text(
+              "To-Do",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
         ),

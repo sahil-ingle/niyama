@@ -43,8 +43,12 @@ class HomePage extends StatelessWidget {
         SliverAppBar(
           pinned: true,
           expandedHeight: 160,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text("Hello, Sahil"),
+            title: Text(
+              "Hello, Sahil",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
         ),
@@ -68,16 +72,16 @@ class HomePage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 4),
                         Text(
                           "${(successRate * 100).toStringAsFixed(0)}%",
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 48,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         SizedBox(height: 4),
@@ -85,7 +89,9 @@ class HomePage extends StatelessWidget {
                           "Habit Success Rate",
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -103,7 +109,7 @@ class HomePage extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Colors.green,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           Text(
@@ -111,13 +117,15 @@ class HomePage extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 10,
-                              color: Colors.grey[600],
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ],
                       ),
-                      progressColor: Colors.green,
-                      backgroundColor: Colors.grey[200]!,
+                      progressColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onSecondary,
                       circularStrokeCap: CircularStrokeCap.round,
                       animation: true,
                       animationDuration: 1200,

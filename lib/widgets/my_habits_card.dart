@@ -96,6 +96,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
+      color: Theme.of(context).colorScheme.surface,
 
       child: ExpansionTile(
         showTrailingIcon: false,
@@ -117,7 +118,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                     widget.isChecked
                         ? FontAwesome.circle_check_solid
                         : FontAwesome.circle,
-                    color: Colors.green,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 26,
                   ),
                 ),
@@ -132,11 +133,15 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
                     Text(
                       "Goal - ${widget.goal} Days",
-                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -147,7 +152,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade800,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
 
@@ -166,9 +171,9 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                   },
                   child: Icon(
                     _isPaused
-                        ? FontAwesome.circle_pause
-                        : FontAwesome.circle_play,
-                    color: Colors.green,
+                        ? FontAwesome.circle_pause_solid
+                        : FontAwesome.circle_play_solid,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 28,
                   ),
                 ),
@@ -179,7 +184,11 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
             Row(
               children: [
-                Icon(FontAwesome.fire_solid, color: Colors.orange, size: 20),
+                Icon(
+                  FontAwesome.fire_solid,
+                  color: Theme.of(context).colorScheme.secondary,
+                  size: 20,
+                ),
                 SizedBox(width: 8),
                 Text(
                   "${widget.currentStreak} Days",
@@ -189,7 +198,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 GestureDetector(
                   child: Icon(
                     FontAwesome.chart_simple_solid,
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.secondary,
                     size: 22,
                   ),
                 ),
@@ -202,8 +211,8 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
               lineHeight: 12,
               percent: widget.percent,
               padding: EdgeInsets.all(0),
-              progressColor: Colors.blueAccent,
-              backgroundColor: Colors.grey[300],
+              progressColor: Theme.of(context).colorScheme.secondary,
+              backgroundColor: Theme.of(context).colorScheme.onSecondary,
             ),
           ],
         ),
@@ -225,7 +234,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).colorScheme.secondary,
                 shape: BoxShape.circle,
               ),
               selectedTextStyle: TextStyle(
