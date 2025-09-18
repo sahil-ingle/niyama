@@ -95,279 +95,287 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "Add New Habit",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-            color: Theme.of(context).colorScheme.onSurface,
+    return GestureDetector(
+      behavior: HitTestBehavior
+          .translucent, // ensures taps on empty space are detected
+      onTap: () {
+        FocusScope.of(context).unfocus(); // dismiss keyboard
+      },
+
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Add New Habit",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
-        ),
-        SizedBox(height: 40),
+          SizedBox(height: 40),
 
-        MyTextField(
-          nameController: _habitNameController,
-          hintText: "Habit Title",
-        ),
-        SizedBox(height: 12),
+          MyTextField(
+            nameController: _habitNameController,
+            hintText: "Habit Title",
+          ),
+          SizedBox(height: 12),
 
-        MyTextField(
-          nameController: _descriptionController,
-          hintText: "Description",
-        ),
-        SizedBox(height: 12),
+          MyTextField(
+            nameController: _descriptionController,
+            hintText: "Description",
+          ),
+          SizedBox(height: 12),
 
-        Row(
-          children: [
-            SizedBox(
-              height: 60,
-              width: 124,
-              child: Center(
-                child: CustomDropdown(
-                  hintText: "Goal",
+          Row(
+            children: [
+              SizedBox(
+                height: 60,
+                width: 124,
+                child: Center(
+                  child: CustomDropdown(
+                    hintText: "Goal",
 
-                  items: [
-                    '7 days',
-                    '21 days',
-                    "30 days",
-                    "90 days",
-                    "365 days",
+                    items: [
+                      '7 days',
+                      '21 days',
+                      "30 days",
+                      "90 days",
+                      "365 days",
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedGoal = int.parse(
+                          value!.split(" ")[0],
+                        ); // addd condition here
+                      });
+                    },
+                    decoration: CustomDropdownDecoration(
+                      closedBorderRadius: BorderRadius.circular(16),
+                      closedFillColor: Theme.of(context).colorScheme.surface,
+                      expandedFillColor: Theme.of(context).colorScheme.surface,
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
+                      headerStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
+                      listItemStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              Spacer(),
+
+              Center(
+                child: FlutterToggleTab(
+                  width: 48,
+                  borderRadius: 16,
+                  height: 54,
+                  selectedBackgroundColors: [
+                    Theme.of(context).colorScheme.primary,
                   ],
-                  onChanged: (value) {
+                  dataTabs: [
+                    DataTab(title: "Positive"),
+                    DataTab(title: "Negative"),
+                  ],
+                  selectedTextStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  unSelectedBackgroundColors: [
+                    Theme.of(context).colorScheme.surface,
+                  ],
+                  unSelectedTextStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+
+                  selectedLabelIndex: (index) {
                     setState(() {
-                      _selectedGoal = int.parse(
-                        value!.split(" ")[0],
-                      ); // addd condition here
+                      _selectedHabitIndex = index;
+                      isPositive = index == 0 ? true : false;
                     });
                   },
-                  decoration: CustomDropdownDecoration(
-                    closedBorderRadius: BorderRadius.circular(16),
-                    closedFillColor: Theme.of(context).colorScheme.surface,
-                    expandedFillColor: Theme.of(context).colorScheme.surface,
-                    hintStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 16,
-                    ),
-                    headerStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 16,
-                    ),
-                    listItemStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 16,
-                    ),
-                  ),
+                  selectedIndex: _selectedHabitIndex,
                 ),
               ),
-            ),
+            ],
+          ),
 
-            Spacer(),
+          SizedBox(height: 12),
 
-            Center(
-              child: FlutterToggleTab(
-                width: 48,
-                borderRadius: 16,
-                height: 54,
-                selectedBackgroundColors: [
-                  Theme.of(context).colorScheme.primary,
-                ],
-                dataTabs: [
-                  DataTab(title: "Positive"),
-                  DataTab(title: "Negative"),
-                ],
-                selectedTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                unSelectedBackgroundColors: [
-                  Theme.of(context).colorScheme.surface,
-                ],
-                unSelectedTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-
-                selectedLabelIndex: (index) {
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FilledButton(
+                onPressed: () {
                   setState(() {
-                    _selectedHabitIndex = index;
-                    isPositive = index == 0 ? true : false;
-                  });
-                },
-                selectedIndex: _selectedHabitIndex,
-              ),
-            ),
-          ],
-        ),
-
-        SizedBox(height: 12),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            FilledButton(
-              onPressed: () {
-                setState(() {
-                  _timePicked = _timePicked.subtract(Duration(minutes: 15));
-                });
-              },
-
-              style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                iconColor: Theme.of(context).colorScheme.onSurface,
-                elevation: 1,
-
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                    bottomLeft: Radius.circular(16),
-                    topLeft: Radius.circular(16),
-                  ),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Icon(Icons.remove),
-              ),
-            ),
-
-            Expanded(
-              child: TimePickerSpinnerPopUp(
-                initTime: _timePicked,
-                minTime: DateTime(0, 0, 0, 0, 15),
-                mode: CupertinoDatePickerMode.time,
-
-                onChange: (dateTime) {
-                  setState(() {
-                    _timePicked = dateTime;
+                    _timePicked = _timePicked.subtract(Duration(minutes: 15));
                   });
                 },
 
-                timeWidgetBuilder: (dateTime) {
-                  return SizedBox(
-                    height: 60,
-                    child: Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  iconColor: Theme.of(context).colorScheme.onSurface,
+                  elevation: 1,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(16),
+                      topLeft: Radius.circular(16),
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Icon(Icons.remove),
+                ),
+              ),
+
+              Expanded(
+                child: TimePickerSpinnerPopUp(
+                  initTime: _timePicked,
+                  minTime: DateTime(0, 0, 0, 0, 15),
+                  mode: CupertinoDatePickerMode.time,
+
+                  onChange: (dateTime) {
+                    setState(() {
+                      _timePicked = dateTime;
+                    });
+                  },
+
+                  timeWidgetBuilder: (dateTime) {
+                    return SizedBox(
+                      height: 60,
+                      child: Card(
+                        color: Theme.of(context).colorScheme.surface,
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            FilledButton(
-              onPressed: () {
-                setState(() {
-                  _timePicked = _timePicked.add(Duration(minutes: 15));
-                });
-              },
-
-              style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                iconColor: Theme.of(context).colorScheme.onSurface,
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.only(
-                    topRight: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                    bottomLeft: Radius.circular(8),
-                    topLeft: Radius.circular(8),
-                  ),
+                    );
+                  },
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Icon(Icons.add),
+
+              FilledButton(
+                onPressed: () {
+                  setState(() {
+                    _timePicked = _timePicked.add(Duration(minutes: 15));
+                  });
+                },
+
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  iconColor: Theme.of(context).colorScheme.onSurface,
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.only(
+                      topRight: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Icon(Icons.add),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 12),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("MON"),
+                isSelected: _selectedDaysMap["MON"]!,
+                day: "MON",
+              ),
+              SizedBox(width: 2),
+
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("TUE"),
+                isSelected: _selectedDaysMap["TUE"]!,
+                day: "TUE",
+              ),
+              SizedBox(width: 2),
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("WED"),
+                isSelected: _selectedDaysMap["WED"]!,
+                day: "WED",
+              ),
+              SizedBox(width: 2),
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("THU"),
+                isSelected: _selectedDaysMap["THU"]!,
+                day: "THU",
+              ),
+
+              SizedBox(height: 20),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("FRI"),
+                isSelected: _selectedDaysMap["FRI"]!,
+                day: "FRI",
+              ),
+              SizedBox(width: 4),
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("SAT"),
+                isSelected: _selectedDaysMap["SAT"]!,
+                day: "SAT",
+              ),
+              SizedBox(width: 4),
+              MyFilledBtn(
+                onTap: () => onFilledBtnTap("SUN"),
+                isSelected: _selectedDaysMap["SUN"]!,
+                day: "SUN",
+              ),
+            ],
+          ),
+          SizedBox(height: 28),
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              fixedSize: Size(160, 52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(20),
               ),
             ),
-          ],
-        ),
 
-        SizedBox(height: 12),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("MON"),
-              isSelected: _selectedDaysMap["MON"]!,
-              day: "MON",
-            ),
-            SizedBox(width: 2),
-
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("TUE"),
-              isSelected: _selectedDaysMap["TUE"]!,
-              day: "TUE",
-            ),
-            SizedBox(width: 2),
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("WED"),
-              isSelected: _selectedDaysMap["WED"]!,
-              day: "WED",
-            ),
-            SizedBox(width: 2),
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("THU"),
-              isSelected: _selectedDaysMap["THU"]!,
-              day: "THU",
-            ),
-
-            SizedBox(height: 20),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("FRI"),
-              isSelected: _selectedDaysMap["FRI"]!,
-              day: "FRI",
-            ),
-            SizedBox(width: 4),
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("SAT"),
-              isSelected: _selectedDaysMap["SAT"]!,
-              day: "SAT",
-            ),
-            SizedBox(width: 4),
-            MyFilledBtn(
-              onTap: () => onFilledBtnTap("SUN"),
-              isSelected: _selectedDaysMap["SUN"]!,
-              day: "SUN",
-            ),
-          ],
-        ),
-        SizedBox(height: 28),
-
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            fixedSize: Size(160, 52),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusGeometry.circular(20),
+            onPressed: addDataHive,
+            child: Text(
+              "Add Habit",
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
-
-          onPressed: addDataHive,
-          child: Text(
-            "Add Habit",
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

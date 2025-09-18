@@ -13,20 +13,30 @@ class MyNavBar extends StatefulWidget {
 class _MyNavBarState extends State<MyNavBar> {
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.eco), label: "Habits"),
-        BottomNavigationBarItem(icon: Icon(Icons.check_circle), label: "To-Do"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
-      currentIndex: widget.currentIndex,
-      onTap: widget.onTap,
-      unselectedItemColor: Theme.of(context).colorScheme.onSurface,
-      selectedItemColor: Theme.of(context).colorScheme.primary,
+    return SizedBox(
+      height: 80,
+      child: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.eco), label: "Habits"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check_circle),
+            label: "To-Do",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Settings",
+          ),
+        ],
 
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
+        currentIndex: widget.currentIndex,
+        onTap: widget.onTap,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+      ),
     );
   }
 }
