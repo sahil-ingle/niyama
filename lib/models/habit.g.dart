@@ -29,13 +29,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       streakDates: (fields[9] as Map).cast<String, int>(),
       isPositive: (fields[10] as bool),
       isCompleted: (fields[11] as bool),
+      isPaused: (fields[12] as bool),
     );
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.habitName)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(10)
       ..write(obj.isPositive)
       ..writeByte(11)
-      ..write(obj.isCompleted);
+      ..write(obj.isCompleted)
+      ..writeByte(12)
+      ..write(obj.isPaused);
   }
 
   @override

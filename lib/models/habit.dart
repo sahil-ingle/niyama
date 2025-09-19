@@ -17,6 +17,7 @@ class Habit extends HiveObject {
     required this.streakDates,
     required this.isPositive,
     required this.isCompleted,
+    required this.isPaused,
   });
 
   @HiveField(0)
@@ -62,4 +63,7 @@ class Habit extends HiveObject {
 
   @HiveField(11)
   bool isCompleted = false;
+
+  @HiveField(12)
+  bool isPaused = false;
 }

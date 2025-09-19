@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -13,9 +15,12 @@ class HabitPage extends StatefulWidget {
 }
 
 class _HabitPageState extends State<HabitPage> {
+  final Map<int, Timer> _timers = {};
+
   @override
   void initState() {
     checkDateChange();
+
     super.initState();
   }
 
@@ -28,6 +33,13 @@ class _HabitPageState extends State<HabitPage> {
       dateBox.put('today', day.toString());
     } else if (dateBox.get('today') != day.toString()) {
       increaseStreak();
+
+      for (int i = 0; i < boxHabit.length; i++) {
+        Habit myHabit = boxHabit.getAt(i);
+        myHabit.timeUtilized = 0;
+        myHabit.save();
+      }
+
       dateBox.put('today', day.toString());
     }
   }
@@ -70,7 +82,41 @@ class _HabitPageState extends State<HabitPage> {
       myHabit.streakDates.remove(todayDate);
       myHabit.currentStreak--;
     }
-    myHabit.timeUtilized = 0;
+    myHabit.save();
+  }
+
+  void _startTimer(int index) {
+    Habit myHabit = boxHabit.getAt(index);
+    _timers[index]?.cancel();
+    _timers[index] = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (myHabit.timeAllocated != myHabit.timeUtilized &&
+          !myHabit.isCompleted) {
+        setState(() {
+          myHabit.timeUtilized++;
+        });
+      } else {
+        setState(() {
+          myHabit.isCompleted = true;
+          myHabit.isPaused = false;
+          if (myHabit.timeAllocated == myHabit.timeUtilized) {
+            increaseDayCount(index, myHabit.timeUtilized);
+          }
+        });
+
+        _timers[index]?.cancel();
+      }
+      myHabit.save();
+    });
+    setState(() {
+      myHabit.isPaused = false;
+    });
+  }
+
+  void _pauseTimer(int index) {
+    Habit myHabit = boxHabit.getAt(index);
+    _timers[index]?.cancel();
+    setState(() => myHabit.isPaused = true);
+
     myHabit.save();
   }
 
@@ -122,7 +168,22 @@ class _HabitPageState extends State<HabitPage> {
                       },
                       percent: myHabit.currentStreak / myHabit.goalDays,
                       streakDates: myHabit.streakDates,
-                      habitIndex: index,
+
+                      isPaused: myHabit.isPaused,
+                      dislayTime: myHabit.timeAllocated - myHabit.timeUtilized,
+
+                      btnPlayPause: () {
+                        setState(() {
+                          if (!myHabit.isCompleted) {
+                            if (!myHabit.isPaused) {
+                              _startTimer(index);
+                            } else {
+                              _pauseTimer(index);
+                            }
+                            myHabit.isPaused = !myHabit.isPaused;
+                          }
+                        });
+                      },
                     ),
                   );
                 },

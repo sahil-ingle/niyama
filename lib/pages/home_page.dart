@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
     return completedHabit;
   }
 
-  int getTotalTimeUtilizedPercent() {
+  int gettotalTimeUtilizedPercent() {
     int totalTimeAllocated = 0;
     int totalTimeUtilized = 0;
 
@@ -29,10 +30,9 @@ class HomePage extends StatelessWidget {
       totalTimeUtilized += myHabit.timeUtilized;
     }
 
-    int totalTimeUtilizedPercent =
-        ((totalTimeUtilized / totalTimeAllocated) * 100).truncate();
+    if (totalTimeAllocated == 0) return 0;
 
-    return totalTimeUtilizedPercent;
+    return ((totalTimeUtilized / totalTimeAllocated) * 100).truncate();
   }
 
   @override
@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
     final int completedHabit = getToatalCompleted();
     final int totalHabit = boxHabit.length;
 
-    final int totalTimeUtilizedPercent = getTotalTimeUtilizedPercent();
+    final int totalTimeUtilizedPercent = gettotalTimeUtilizedPercent();
 
     return CustomScrollView(
       slivers: [
@@ -104,7 +104,10 @@ class HomePage extends StatelessWidget {
                     CircularPercentIndicator(
                       radius: 60.0,
                       lineWidth: 8.0,
-                      percent: (completedHabit / totalHabit).truncateToDouble(),
+                      percent: totalHabit == 0
+                          ? 0.0
+                          : completedHabit / totalHabit,
+
                       center: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -130,6 +133,37 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 8),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "Heat Map",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 8),
+
+            HeatMap(
+              colorsets: {
+                1: Theme.of(context).colorScheme.primary,
+                2: Colors.black,
+                3: Colors.blue,
+                4: Colors.red,
+              },
+
+              datasets: {DateTime(2025, 09, 15): 1},
+              showColorTip: false,
+              scrollable: true,
+              startDate: DateTime.now().subtract(Duration(days: 85)),
+              colorMode: ColorMode.color,
+            ),
+            SizedBox(height: 8),
           ],
         ),
       ],

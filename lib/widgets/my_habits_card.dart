@@ -1,9 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:niyama/models/boxes.dart';
-import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,7 +15,10 @@ class MyHabitsCard extends StatefulWidget {
     required this.btnChecked,
     required this.percent,
     required this.streakDates,
-    required this.habitIndex,
+
+    required this.btnPlayPause,
+    required this.dislayTime,
+    required this.isPaused,
     super.key,
   });
 
@@ -31,60 +30,18 @@ class MyHabitsCard extends StatefulWidget {
   final bool isChecked;
   final double percent;
   final Map<String, int> streakDates;
-  final int habitIndex;
+
+  final int dislayTime;
+  final bool isPaused;
 
   final Function() btnChecked;
+  final Function() btnPlayPause;
 
   @override
   State<MyHabitsCard> createState() => _MyHabitsCardState();
 }
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
-  late int _timeAllocatedSeconds;
-  late int _timeUnitlizedSeconds;
-  bool _isPaused = false;
-  Timer? _timer;
-  late Habit myHabit;
-
-  @override
-  void initState() {
-    super.initState();
-    myHabit = boxHabit.getAt(widget.habitIndex);
-    _timeAllocatedSeconds = widget.timeAllocated;
-    _timeUnitlizedSeconds = myHabit.timeUtilized;
-  }
-
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_timeAllocatedSeconds != _timeUnitlizedSeconds &&
-          !myHabit.isCompleted) {
-        setState(() {
-          _timeUnitlizedSeconds++;
-        });
-      } else {
-        setState(() {
-          myHabit.isCompleted = true;
-          _isPaused = false;
-        });
-
-        _timer?.cancel();
-      }
-      myHabit.timeUtilized = _timeUnitlizedSeconds;
-      myHabit.save();
-    });
-    setState(() {
-      _isPaused = false;
-    });
-  }
-
-  void _pauseTimer() {
-    _timer?.cancel();
-    setState(() => _isPaused = true);
-    myHabit.timeUtilized = _timeUnitlizedSeconds;
-    myHabit.save();
-  }
-
   String _formatTime(int seconds) {
     final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
@@ -150,7 +107,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 Spacer(),
 
                 Text(
-                  _formatTime(_timeAllocatedSeconds - _timeUnitlizedSeconds),
+                  _formatTime(widget.dislayTime),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -161,20 +118,10 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 SizedBox(width: 8),
 
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (!myHabit.isCompleted) {
-                        if (!_isPaused) {
-                          _startTimer();
-                        } else {
-                          _pauseTimer();
-                        }
-                        _isPaused = !_isPaused;
-                      }
-                    });
-                  },
+                  onTap: widget.btnPlayPause,
+
                   child: Icon(
-                    _isPaused
+                    widget.isPaused
                         ? FontAwesome.circle_pause_solid
                         : FontAwesome.circle_play_solid,
                     color: Theme.of(context).colorScheme.primary,

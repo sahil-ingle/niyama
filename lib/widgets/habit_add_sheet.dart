@@ -79,6 +79,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           streakDates: {},
           isPositive: isPositive,
           isCompleted: false,
+          isPaused: false,
         ),
       );
 
@@ -242,7 +243,6 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               Expanded(
                 child: TimePickerSpinnerPopUp(
                   initTime: _timePicked,
-                  minTime: DateTime(0, 0, 0, 0, 15),
                   mode: CupertinoDatePickerMode.time,
 
                   onChange: (dateTime) {
