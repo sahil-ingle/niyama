@@ -40,34 +40,37 @@ class MyHabitsCard extends StatefulWidget {
 }
 
 class _MyHabitsCardState extends State<MyHabitsCard> {
-  late int _seconds;
+  late int _timeAllocatedSeconds;
+  late int _timeUnitlizedSeconds;
   bool _isPaused = false;
   Timer? _timer;
   late Habit myHabit;
-  late int _timeUtilized;
 
   @override
   void initState() {
     super.initState();
     myHabit = boxHabit.getAt(widget.habitIndex);
-    _seconds = widget.timeAllocated;
-    _timeUtilized = myHabit.timeUtilized;
+    _timeAllocatedSeconds = widget.timeAllocated;
+    _timeUnitlizedSeconds = myHabit.timeUtilized;
   }
 
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_seconds > 0) {
+      if (_timeAllocatedSeconds != _timeUnitlizedSeconds &&
+          !myHabit.isCompleted) {
         setState(() {
-          _seconds--;
-          _timeUtilized++;
+          _timeUnitlizedSeconds++;
         });
       } else {
-        myHabit.isCompleted = true;
+        setState(() {
+          myHabit.isCompleted = true;
+          _isPaused = false;
+        });
+
         _timer?.cancel();
       }
-      myHabit.timeUtilized = _timeUtilized;
-      myHabit.timeAllocated = _seconds;
+      myHabit.timeUtilized = _timeUnitlizedSeconds;
       myHabit.save();
     });
     setState(() {
@@ -78,8 +81,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
   void _pauseTimer() {
     _timer?.cancel();
     setState(() => _isPaused = true);
-    myHabit.timeUtilized = _timeUtilized;
-    myHabit.timeAllocated = _seconds;
+    myHabit.timeUtilized = _timeUnitlizedSeconds;
     myHabit.save();
   }
 
@@ -148,7 +150,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 Spacer(),
 
                 Text(
-                  _formatTime(_seconds),
+                  _formatTime(_timeAllocatedSeconds - _timeUnitlizedSeconds),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -161,12 +163,14 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (!_isPaused) {
-                        _startTimer();
-                      } else {
-                        _pauseTimer();
+                      if (!myHabit.isCompleted) {
+                        if (!_isPaused) {
+                          _startTimer();
+                        } else {
+                          _pauseTimer();
+                        }
+                        _isPaused = !_isPaused;
                       }
-                      _isPaused = !_isPaused;
                     });
                   },
                   child: Icon(
@@ -184,11 +188,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
             Row(
               children: [
-                Icon(
-                  FontAwesome.fire_solid,
-                  color: Theme.of(context).colorScheme.secondary,
-                  size: 20,
-                ),
+                Icon(FontAwesome.fire_solid, color: Colors.white, size: 20),
                 SizedBox(width: 8),
                 Text(
                   "${widget.currentStreak} Days",
@@ -234,7 +234,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.primary,
                 shape: BoxShape.circle,
               ),
               selectedTextStyle: TextStyle(

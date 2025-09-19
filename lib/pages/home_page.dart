@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -7,36 +6,41 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  int getTotalCompletedHabit() {
-    DateTime now = DateTime.now();
-    DateTime startOfMonth = DateTime(now.year, now.month, 1);
-
+  int getToatalCompleted() {
     int completedHabit = 0;
 
-    for (int i = 0; i < now.day; i++) {
-      DateTime currentDay = startOfMonth.add(Duration(days: i));
-      String formattedTime = DateFormat('dd-MM-yyyy').format(currentDay);
-
-      for (int j = 0; j < boxHabit.length; j++) {
-        Habit myHabit = boxHabit.getAt(j);
-        if (myHabit.streakDates.containsKey(formattedTime)) {
-          completedHabit++;
-        }
+    for (int i = 0; i < boxHabit.length; i++) {
+      Habit myHabit = boxHabit.getAt(i);
+      if (myHabit.isCompleted) {
+        completedHabit++;
       }
     }
+
     return completedHabit;
+  }
+
+  int getTotalTimeUtilizedPercent() {
+    int totalTimeAllocated = 0;
+    int totalTimeUtilized = 0;
+
+    for (int i = 0; i < boxHabit.length; i++) {
+      Habit myHabit = boxHabit.getAt(i);
+      totalTimeAllocated += myHabit.timeAllocated;
+      totalTimeUtilized += myHabit.timeUtilized;
+    }
+
+    int totalTimeUtilizedPercent =
+        ((totalTimeUtilized / totalTimeAllocated) * 100).truncate();
+
+    return totalTimeUtilizedPercent;
   }
 
   @override
   Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
-    final int totalDaysinMonth = DateTime(now.year, now.month + 1, 0).day;
-    final double monthCompleted = now.day / totalDaysinMonth;
-    final int totalHabits = boxHabit.length * now.day;
-    final int completedHabit = getTotalCompletedHabit();
-    final double successRate = totalHabits == 0
-        ? 0
-        : completedHabit / totalHabits;
+    final int completedHabit = getToatalCompleted();
+    final int totalHabit = boxHabit.length;
+
+    final int totalTimeUtilizedPercent = getTotalTimeUtilizedPercent();
 
     return CustomScrollView(
       slivers: [
@@ -68,7 +72,7 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Monthly Overview",
+                          "Daily Overview",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -77,7 +81,7 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          "${(successRate * 100).toStringAsFixed(0)}%",
+                          "$totalTimeUtilizedPercent%",
                           style: TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
@@ -86,7 +90,7 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          "Habit Success Rate",
+                          "Today's Success Rate",
                           style: TextStyle(
                             fontSize: 14,
                             color: Theme.of(
@@ -100,23 +104,15 @@ class HomePage extends StatelessWidget {
                     CircularPercentIndicator(
                       radius: 60.0,
                       lineWidth: 8.0,
-                      percent: monthCompleted,
+                      percent: (completedHabit / totalHabit).truncateToDouble(),
                       center: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "${(monthCompleted * 100).toStringAsFixed(0)}%",
+                            "$completedHabit / $totalHabit",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                          Text(
-                            "Month\nCompleted",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 10,
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),

@@ -70,6 +70,7 @@ class _HabitPageState extends State<HabitPage> {
       myHabit.streakDates.remove(todayDate);
       myHabit.currentStreak--;
     }
+    myHabit.timeUtilized = 0;
     myHabit.save();
   }
 

@@ -8,19 +8,27 @@ import 'package:flutter/material.dart';
 final HSLColor surfaceDark = HSLColor.fromAHSL(1.0, 210, 0.20, 0.10);
 final HSLColor cardSurfaceDark = HSLColor.fromAHSL(1.0, 210, 0.18, 0.18);
 
-// Primary & Secondary
+// Dark theme
+// Dark theme
+// Dark theme
+// Primary
 final HSLColor primaryDark = HSLColor.fromAHSL(
   1.0,
-  45,
-  0.95,
-  0.55,
-); // brighter yellow
-final HSLColor secondaryDark = HSLColor.fromAHSL(
-  1.0,
-  160,
-  0.75,
+  145,
   0.50,
-); // richer green
+  0.45,
+); // Dark theme
+final HSLColor primaryLight = HSLColor.fromAHSL(
+  1.0,
+  145,
+  0.55,
+  0.55,
+); // Light theme
+
+// Secondary
+final HSLColor secondaryDark = HSLColor.fromAHSL(1.0, 175, 0.55, 0.45);
+final HSLColor secondaryLight = HSLColor.fromAHSL(1.0, 175, 0.50, 0.55);
+// Light theme
 
 // Text
 final HSLColor textPrimaryDark = HSLColor.fromAHSL(1.0, 0, 0.0, 0.97);
@@ -38,8 +46,6 @@ final HSLColor surfaceLight = HSLColor.fromAHSL(1.0, 210, 0.12, 0.96);
 final HSLColor cardSurfaceLight = HSLColor.fromAHSL(1.0, 210, 0.10, 0.98);
 
 // Primary & Secondary
-final HSLColor primaryLight = HSLColor.fromAHSL(1.0, 45, 0.85, 0.50);
-final HSLColor secondaryLight = HSLColor.fromAHSL(1.0, 160, 0.65, 0.45);
 
 // Text
 final HSLColor textPrimaryLight = HSLColor.fromAHSL(1.0, 0, 0.0, 0.10);
