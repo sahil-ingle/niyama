@@ -1,10 +1,10 @@
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:niyama/widgets/my_drop_down.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
+import 'package:niyama/widgets/my_toggle.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 import 'package:niyama/models/boxes.dart';
@@ -61,7 +61,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
       );
     } else {
       boxHabit.put(
-        'key_${_habitNameController.text}',
+        'key_${DateTime.now()}',
         Habit(
           habitName: _habitNameController.text,
           description: _descriptionController.text,
@@ -134,16 +134,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                 height: 60,
                 width: 124,
                 child: Center(
-                  child: CustomDropdown(
-                    hintText: "Goal",
-
-                    items: [
-                      '7 days',
-                      '21 days',
-                      "30 days",
-                      "90 days",
-                      "365 days",
-                    ],
+                  child: MyDropDown(
                     onChanged: (value) {
                       setState(() {
                         _selectedGoal = int.parse(
@@ -151,33 +142,6 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                         ); // addd condition here
                       });
                     },
-                    decoration: CustomDropdownDecoration(
-                      closedBorderRadius: BorderRadius.circular(16),
-                      closedFillColor: Theme.of(
-                        context,
-                      ).colorScheme.secondaryContainer,
-                      expandedFillColor: Theme.of(
-                        context,
-                      ).colorScheme.secondaryContainer,
-                      hintStyle: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSecondaryContainer,
-                        fontSize: 16,
-                      ),
-                      headerStyle: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSecondaryContainer,
-                        fontSize: 16,
-                      ),
-                      listItemStyle: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSecondaryContainer,
-                        fontSize: 16,
-                      ),
-                    ),
                   ),
                 ),
               ),
@@ -185,34 +149,14 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
               Spacer(),
 
               Center(
-                child: FlutterToggleTab(
-                  width: 48,
-                  borderRadius: 16,
-                  height: 54,
-                  selectedBackgroundColors: [
-                    Theme.of(context).colorScheme.primary,
-                  ],
-                  dataTabs: [
-                    DataTab(title: "Positive"),
-                    DataTab(title: "Negative"),
-                  ],
-                  selectedTextStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  unSelectedBackgroundColors: [
-                    Theme.of(context).colorScheme.secondaryContainer,
-                  ],
-                  unSelectedTextStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
-
+                child: MyToggle(
                   selectedLabelIndex: (index) {
                     setState(() {
                       _selectedHabitIndex = index;
                       isPositive = index == 0 ? true : false;
                     });
                   },
-                  selectedIndex: _selectedHabitIndex,
+                  selectedHabitIndex: _selectedHabitIndex,
                 ),
               ),
             ],

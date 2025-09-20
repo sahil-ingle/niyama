@@ -31,15 +31,10 @@ class _MyNavBarState extends State<MyNavBar> {
 
         type: BottomNavigationBarType.fixed,
 
-        backgroundColor: Theme.of(
-          context,
-        ).colorScheme.secondaryContainer.withValues(alpha: 0.5),
         elevation: 4,
 
         currentIndex: widget.currentIndex,
         onTap: widget.onTap,
-        unselectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
 
         showSelectedLabels: true,
         showUnselectedLabels: true,

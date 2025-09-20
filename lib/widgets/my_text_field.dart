@@ -15,23 +15,8 @@ class MyTextField extends StatelessWidget {
     return TextField(
       controller: nameController,
       decoration: InputDecoration(
-        fillColor: Theme.of(context).colorScheme.secondaryContainer,
         filled: true,
         hintText: hintText,
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
 
         border: OutlineInputBorder(
           borderSide: BorderSide.none,

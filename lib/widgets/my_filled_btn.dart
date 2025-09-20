@@ -17,17 +17,21 @@ class MyFilledBtn extends StatelessWidget {
     return FilledButton(
       onPressed: onTap,
 
-      style: FilledButton.styleFrom(
-        backgroundColor: isSelected
-            ? Theme.of(context).colorScheme.secondary
-            : Theme.of(context).colorScheme.secondaryContainer,
-
-        shape: RoundedRectangleBorder(
-          borderRadius: isSelected
-              ? BorderRadiusGeometry.circular(12)
-              : BorderRadiusGeometry.circular(40),
-        ),
+      statesController: WidgetStatesController(
+        isSelected ? {WidgetState.selected} : {},
       ),
+
+      // style: FilledButton.styleFrom(
+      //   backgroundColor: isSelected
+      //       ? Theme.of(context).colorScheme.secondary
+      //       : Theme.of(context).colorScheme.secondaryContainer,
+
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: isSelected
+      //         ? BorderRadiusGeometry.circular(12)
+      //         : BorderRadiusGeometry.circular(40),
+      //   ),
+      // ),
       child: Text(
         day,
         style: TextStyle(

@@ -76,6 +76,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final int completedHabit = getToatalCompleted();
     final int totalHabit = boxHabit.length;
 
@@ -109,7 +111,7 @@ class HomePage extends StatelessWidget {
           children: [
             Card(
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              elevation: 6,
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -176,7 +178,8 @@ class HomePage extends StatelessWidget {
                       progressColor: Theme.of(context).colorScheme.secondary,
                       backgroundColor: Theme.of(
                         context,
-                      ).colorScheme.onSecondary,
+                      ).colorScheme.onSecondaryContainer.withValues(alpha: 0.1),
+
                       circularStrokeCap: CircularStrokeCap.round,
                       animation: true,
                       animationDuration: 1200,

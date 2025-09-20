@@ -49,6 +49,43 @@ final ThemeData darkThemeData = ThemeData.dark().copyWith(
     foregroundColor: kColorSchemeDark.onPrimary,
   ),
 
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: kColorSchemeDark.secondaryContainer.withValues(alpha: 0.5),
+    unselectedItemColor: kColorSchemeDark.onSecondaryContainer,
+    selectedItemColor: kColorSchemeDark.primary,
+  ),
+
+  inputDecorationTheme: InputDecorationTheme(
+    fillColor: kColorSchemeDark.secondaryContainer,
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorSchemeDark.primary, width: 2),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorSchemeDark.error, width: 2),
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+
+  filledButtonTheme: FilledButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return kColorSchemeDark.secondary; // Selected in dark mode
+        }
+        return kColorSchemeDark.secondaryContainer; // Default in dark mode
+      }),
+      shape: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          );
+        }
+        return RoundedRectangleBorder(borderRadius: BorderRadius.circular(40));
+      }),
+    ),
+  ),
+
   // ExpansionTile Theme
   expansionTileTheme: ExpansionTileThemeData(
     backgroundColor: kColorSchemeDark.secondaryContainer.withValues(
