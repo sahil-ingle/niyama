@@ -188,10 +188,14 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 8),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 16,
+                top: 4,
+                bottom: 8,
+              ),
               child: Text(
                 "Heat Map",
                 style: TextStyle(
@@ -201,8 +205,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-
-            SizedBox(height: 8),
 
             Card(
               elevation: 4,
