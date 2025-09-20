@@ -15,6 +15,8 @@ void main() async {
 
   await Hive.openBox<String>('profile');
 
+  boxToDo = await Hive.openBox<String>('to-do');
+
   runApp(const MainApp());
 }
 

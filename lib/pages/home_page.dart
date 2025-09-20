@@ -208,7 +208,7 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(
                   top: 16,
-                  bottom: 16,
+                  bottom: 20,
                   left: 16,
                   right: 16,
                 ),
@@ -232,7 +232,7 @@ class HomePage extends StatelessWidget {
                   ).colorScheme.onSecondaryContainer.withValues(alpha: 0.1),
 
                   datasets: getHeatMapData(),
-                  showColorTip: true,
+                  showColorTip: false,
                   scrollable: true,
                   colorTipSize: 8,
                   textColor: Theme.of(

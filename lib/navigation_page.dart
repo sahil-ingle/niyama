@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:niyama/models/boxes.dart';
 import 'package:niyama/pages/habit_page.dart';
 import 'package:niyama/pages/home_page.dart';
 import 'package:niyama/pages/settings_page.dart';
 import 'package:niyama/pages/to_do_page.dart';
 import 'package:niyama/widgets/habit_add_sheet.dart';
 import 'package:niyama/widgets/my_nav_bar.dart';
+import 'package:niyama/widgets/my_text_field.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -15,6 +17,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
+  final _toDoController = TextEditingController();
 
   void onItemSelect(int index) {
     setState(() {
@@ -29,7 +32,43 @@ class _NavigationPageState extends State<NavigationPage> {
     SettingsPage(),
   ];
 
-  void addNewToDo() {}
+  void addNewToDo() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text("Add To Do"),
+        content: MyTextField(
+          nameController: _toDoController,
+          hintText: "To Do",
+        ),
+        actions: [
+          OutlinedButton(
+            onPressed: () {
+              final enteredName = _toDoController.text.trim();
+              if (enteredName.isNotEmpty) {
+                boxToDo.put('key_${DateTime.now()}', enteredName);
+                _toDoController.clear();
+
+                Navigator.pop(ctx);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Please enter a valid To do")),
+                );
+              }
+            },
+            child: Text("Submit"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _toDoController.dispose();
+    super.dispose();
+  }
 
   void addNewHabit() {
     showModalBottomSheet(
