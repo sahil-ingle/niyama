@@ -3,7 +3,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:niyama/navigation_page.dart';
 import 'package:niyama/models/boxes.dart';
-import 'package:niyama/theme/theme.dart';
+import 'package:niyama/theme/dark_theme.dart';
+import 'package:niyama/theme/light_theme.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -11,6 +12,8 @@ void main() async {
   boxHabit = await Hive.openBox<Habit>('habit');
 
   await Hive.openBox<String>('dateBox');
+
+  await Hive.openBox<String>('profile');
 
   runApp(const MainApp());
 }
@@ -22,8 +25,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: NavigationPage(),
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: lightThemeData,
+      darkTheme: darkThemeData,
     );
   }
 }

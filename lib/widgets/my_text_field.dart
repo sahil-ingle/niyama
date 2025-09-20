@@ -15,7 +15,7 @@ class MyTextField extends StatelessWidget {
     return TextField(
       controller: nameController,
       decoration: InputDecoration(
-        fillColor: Theme.of(context).colorScheme.surface,
+        fillColor: Theme.of(context).colorScheme.secondaryContainer,
         filled: true,
         hintText: hintText,
         focusedBorder: OutlineInputBorder(
@@ -26,7 +26,10 @@ class MyTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.redAccent, width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: 2,
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
 

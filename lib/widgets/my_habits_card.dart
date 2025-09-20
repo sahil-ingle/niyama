@@ -15,7 +15,6 @@ class MyHabitsCard extends StatefulWidget {
     required this.btnChecked,
     required this.percent,
     required this.streakDates,
-
     required this.btnPlayPause,
     required this.dislayTime,
     required this.isPaused,
@@ -51,11 +50,13 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      color: Theme.of(context).colorScheme.surface,
+      elevation: 3,
+      color: colorScheme.surface, // subtle card background
 
       child: ExpansionTile(
         showTrailingIcon: false,
@@ -64,26 +65,34 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        childrenPadding: const EdgeInsets.symmetric(horizontal: 8),
+        childrenPadding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 12,
+        ),
+
+        /// --- HEADER SECTION ---
         title: Column(
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                /// Checkbox for habit completion
                 GestureDetector(
                   onTap: widget.btnChecked,
-
                   child: Icon(
                     widget.isChecked
                         ? FontAwesome.circle_check_solid
                         : FontAwesome.circle,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: widget.isChecked
+                        ? colorScheme.primary
+                        : colorScheme.onSurface,
                     size: 26,
                   ),
                 ),
 
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
 
+                /// Habit Name & Goal
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,78 +101,92 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Theme.of(context).colorScheme.onSecondary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       "Goal - ${widget.goal} Days",
                       style: TextStyle(
                         fontSize: 13,
-                        color: Theme.of(context).colorScheme.onSecondary,
+                        color: colorScheme.onSecondaryContainer.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
 
+                /// Timer Display
                 Text(
                   _formatTime(widget.dislayTime),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
 
+                /// Play / Pause Button
                 GestureDetector(
                   onTap: widget.btnPlayPause,
-
                   child: Icon(
                     widget.isPaused
                         ? FontAwesome.circle_pause_solid
                         : FontAwesome.circle_play_solid,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: colorScheme.primary,
                     size: 28,
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
+            /// Streak and Stats Icon
             Row(
               children: [
-                Icon(FontAwesome.fire_solid, color: Colors.white, size: 20),
-                SizedBox(width: 8),
+                Icon(
+                  FontAwesome.fire_solid,
+                  color:
+                      colorScheme.secondary, // fire color matches error color
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
                 Text(
                   "${widget.currentStreak} Days",
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                 ),
-                Spacer(),
+                const Spacer(),
                 GestureDetector(
                   child: Icon(
                     FontAwesome.chart_simple_solid,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: colorScheme.secondary,
                     size: 22,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12),
 
+            const SizedBox(height: 12),
+
+            /// Progress Bar
             LinearPercentIndicator(
-              barRadius: Radius.circular(16),
+              barRadius: const Radius.circular(16),
               lineHeight: 12,
               percent: widget.percent,
-              padding: EdgeInsets.all(0),
-              progressColor: Theme.of(context).colorScheme.secondary,
-              backgroundColor: Theme.of(context).colorScheme.onSecondary,
+              padding: EdgeInsets.zero,
+              progressColor: colorScheme.secondary,
+              backgroundColor: colorScheme.onSecondaryContainer.withValues(
+                alpha: 0.1,
+              ),
             ),
           ],
         ),
 
+        /// --- EXPANDED SECTION ---
         children: [
           TableCalendar(
             startingDayOfWeek: StartingDayOfWeek.monday,
@@ -173,21 +196,36 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
             lastDay: DateTime.utc(2030, 3, 14),
             focusedDay: DateTime.now(),
 
-            // highlight if the day exists in streakDates
+            /// Highlight streak days
             selectedDayPredicate: (day) {
               final dateKey = DateFormat('dd-MM-yyyy').format(day);
               return widget.streakDates.containsKey(dateKey);
             },
 
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: TextStyle(color: colorScheme.onSecondaryContainer),
+            ),
+
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: colorScheme.primary,
                 shape: BoxShape.circle,
               ),
+
+              todayDecoration: BoxDecoration(
+                color: colorScheme.secondary,
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(color: colorScheme.onSecondary),
               selectedTextStyle: TextStyle(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
               ),
+              defaultTextStyle: TextStyle(
+                color: colorScheme.onSecondaryContainer,
+              ),
+
+              weekendTextStyle: TextStyle(color: colorScheme.error),
             ),
           ),
         ],

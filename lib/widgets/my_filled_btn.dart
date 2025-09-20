@@ -20,7 +20,7 @@ class MyFilledBtn extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: isSelected
             ? Theme.of(context).colorScheme.secondary
-            : Theme.of(context).colorScheme.surface,
+            : Theme.of(context).colorScheme.secondaryContainer,
 
         shape: RoundedRectangleBorder(
           borderRadius: isSelected
@@ -33,7 +33,7 @@ class MyFilledBtn extends StatelessWidget {
         style: TextStyle(
           color: isSelected
               ? Theme.of(context).colorScheme.onSecondary
-              : Theme.of(context).colorScheme.onSurface,
+              : Theme.of(context).colorScheme.onSecondaryContainer,
         ),
       ),
     );
