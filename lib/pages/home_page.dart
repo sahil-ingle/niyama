@@ -100,6 +100,7 @@ class HomePage extends StatelessWidget {
                   name,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
                   ),
                 );
               },

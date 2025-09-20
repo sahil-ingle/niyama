@@ -4,7 +4,7 @@ import 'package:niyama/pages/habit_page.dart';
 import 'package:niyama/pages/home_page.dart';
 import 'package:niyama/pages/settings_page.dart';
 import 'package:niyama/pages/to_do_page.dart';
-import 'package:niyama/widgets/habit_add_sheet.dart';
+import 'package:niyama/pages/habit_add_sheet.dart';
 import 'package:niyama/widgets/my_nav_bar.dart';
 import 'package:niyama/widgets/my_text_field.dart';
 

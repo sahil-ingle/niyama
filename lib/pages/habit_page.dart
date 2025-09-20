@@ -131,7 +131,10 @@ class _HabitPageState extends State<HabitPage> {
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               "Habits",
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
@@ -141,7 +144,9 @@ class _HabitPageState extends State<HabitPage> {
           valueListenable: boxHabit.listenable(),
           builder: (context, boxHabit, widget) {
             if (boxHabit.length <= 0) {
-              return SliverList.list(children: [Text("No Data")]);
+              return SliverList.list(
+                children: [Center(child: Text("No Habits"))],
+              );
             } else {
               return SliverList.builder(
                 itemCount: boxHabit.length,

@@ -61,88 +61,95 @@ class _SettingsPageState extends State<SettingsPage> {
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               "Settings",
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
         ),
         SliverList.list(
           children: [
-            Column(
-              children: [
-                SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Change Name",
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Theme.of(context).colorScheme.onSurface,
+            Card(
+              child: Column(
+                children: [
+                  SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Change Name",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "Add your Name",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: 0.5),
+                            Text(
+                              "Add your Name",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: showDialogBox,
-                        icon: Icon(FontAwesome.pen_to_square),
-                      ),
-                    ],
+                          ],
+                        ),
+                        Spacer(),
+                        IconButton(
+                          onPressed: showDialogBox,
+                          icon: Icon(FontAwesome.pen_to_square),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12),
+                  SizedBox(height: 12),
 
-                Divider(indent: 20, endIndent: 20),
+                  Divider(indent: 20, endIndent: 20),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Theme",
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Theme.of(context).colorScheme.onSurface,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Theme",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "Change to theme of your app \nLight or Dark",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: 0.5),
+                            Text(
+                              "Change to theme of your app \nLight or Dark",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Switch(
-                        value: _isDarkMode,
-                        onChanged: (value) => changeTheme(value),
-                      ),
-                    ],
+                          ],
+                        ),
+                        Spacer(),
+                        Switch(
+                          value: _isDarkMode,
+                          onChanged: (value) => changeTheme(value),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-              ],
+                  SizedBox(height: 16),
+                ],
+              ),
             ),
           ],
         ),

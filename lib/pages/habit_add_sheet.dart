@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:niyama/widgets/my_drop_down.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
+import 'package:niyama/widgets/my_time_update_btn.dart';
 import 'package:niyama/widgets/my_toggle.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
@@ -47,8 +49,9 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Please enter all the data"),
-          content: Text("put all the data"),
+          title: Text("Empty Fields"),
+          content: Text("Please fill in all the fields."),
+
           actions: [
             TextButton(
               onPressed: () {
@@ -96,6 +99,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       behavior: HitTestBehavior
           .translucent, // ensures taps on empty space are detected
@@ -165,35 +169,23 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           SizedBox(height: 12),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              FilledButton(
-                onPressed: () {
+              MyTimeUpdateBtn(
+                onChanged: () {
                   setState(() {
                     _timePicked = _timePicked.subtract(Duration(minutes: 15));
                   });
                 },
-
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.secondaryContainer,
-                  iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
-                  elevation: 1,
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                      bottomLeft: Radius.circular(16),
-                      topLeft: Radius.circular(16),
-                    ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.only(
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(16),
+                    topLeft: Radius.circular(16),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Icon(Icons.remove),
-                ),
+                icon: FontAwesome.minus_solid,
               ),
 
               Expanded(
@@ -209,20 +201,25 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
 
                   timeWidgetBuilder: (dateTime) {
                     return SizedBox(
-                      height: 65,
+                      height: 69,
+
                       child: Card(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        elevation: 1,
+                        color: isDarkMode
+                            ? Theme.of(context).colorScheme.secondaryContainer
+                            : Theme.of(context).colorScheme.surface,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadiusGeometry.circular(8),
                         ),
                         child: Center(
                           child: Text(
-                            '${_timePicked.hour.toString()} Hr ${_timePicked.minute.toString()} Min',
+                            '${_timePicked.hour.toString()} Hour ${_timePicked.minute.toString()} Min',
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSecondaryContainer,
+                              color: isDarkMode
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer
+                                  : Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -232,32 +229,21 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                 ),
               ),
 
-              FilledButton(
-                onPressed: () {
+              MyTimeUpdateBtn(
+                onChanged: () {
                   setState(() {
                     _timePicked = _timePicked.add(Duration(minutes: 15));
                   });
                 },
-
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.secondaryContainer,
-                  iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.only(
-                      topRight: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(8),
-                      topLeft: Radius.circular(8),
-                    ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.only(
+                    topRight: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(8),
+                    topLeft: Radius.circular(8),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Icon(Icons.add),
-                ),
+                icon: FontAwesome.plus_solid,
               ),
             ],
           ),
@@ -303,13 +289,13 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                 isSelected: _selectedDaysMap["FRI"]!,
                 day: "FRI",
               ),
-              SizedBox(width: 4),
+              SizedBox(width: 6),
               MyFilledBtn(
                 onTap: () => onFilledBtnTap("SAT"),
                 isSelected: _selectedDaysMap["SAT"]!,
                 day: "SAT",
               ),
-              SizedBox(width: 4),
+              SizedBox(width: 6),
               MyFilledBtn(
                 onTap: () => onFilledBtnTap("SUN"),
                 isSelected: _selectedDaysMap["SUN"]!,

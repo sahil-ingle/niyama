@@ -17,7 +17,10 @@ class ToDoPage extends StatelessWidget {
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               "To-Do",
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             titlePadding: EdgeInsets.only(left: 16, bottom: 16),
           ),
@@ -27,7 +30,9 @@ class ToDoPage extends StatelessWidget {
           valueListenable: boxToDo.listenable(),
           builder: (context, boxToDo, child) {
             if (boxToDo.length <= 0) {
-              return SliverList.list(children: [Text("No Data")]);
+              return SliverList.list(
+                children: [Center(child: Text("No To-Do"))],
+              );
             } else {
               return SliverList.builder(
                 itemCount: boxToDo.length,
