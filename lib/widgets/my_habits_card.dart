@@ -56,20 +56,36 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
     return "$hours:$minutes:$secs";
   }
 
+  Color getCardsColor() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    DateTime now = DateTime.now();
+    String todayDay = DateFormat('EEE').format(now).toUpperCase();
+
+    if (widget.isPositive) {
+      if (widget.habitDays[todayDay] == true) {
+        return Theme.of(context).colorScheme.surface;
+      } else {
+        return Colors.white;
+      }
+    } else {
+      if (isDarkMode) {
+        return Colors.red;
+      } else {
+        return const Color.fromARGB(255, 255, 179, 187);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 3,
-      color: widget.isPositive
-          ? colorScheme.surface
-          : isDarkMode
-          ? Colors.red
-          : const Color.fromARGB(255, 255, 179, 187), // subtle card background
+      color: getCardsColor(), // subtle card background
 
       child: ExpansionTile(
         showTrailingIcon: false,

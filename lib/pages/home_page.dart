@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -23,13 +24,37 @@ class HomePage extends StatelessWidget {
     return completedHabit;
   }
 
+  int getTotalHabit() {
+    int totalHabit = 0;
+
+    DateTime now = DateTime.now();
+
+    String todayDay = DateFormat('EEE').format(now).toUpperCase();
+
+    for (int i = 0; i < boxHabit.length; i++) {
+      Habit myHabit = boxHabit.getAt(i);
+      if (myHabit.habitDays[todayDay] == true) {
+        totalHabit++;
+      }
+    }
+
+    return totalHabit;
+  }
+
   int gettotalTimeUtilizedPercent() {
     int totalTimeAllocated = 0;
     int totalTimeUtilized = 0;
 
+    DateTime now = DateTime.now();
+
+    String todayDay = DateFormat('EEE').format(now).toUpperCase();
+
     for (int i = 0; i < boxHabit.length; i++) {
       Habit myHabit = boxHabit.getAt(i);
-      totalTimeAllocated += myHabit.timeAllocated;
+
+      if (myHabit.habitDays[todayDay] == true) {
+        totalTimeAllocated += myHabit.timeAllocated;
+      }
       totalTimeUtilized += myHabit.timeUtilized;
     }
 
@@ -65,7 +90,7 @@ class HomePage extends StatelessWidget {
 
         if (habit.streakDates.containsKey(dateString) && habit.isPositive) {
           // Positive habit completed
-          if (currentCount < 5) {
+          if (currentCount < 4) {
             heatmap[dateKey] = currentCount + 1;
           }
         } else if (!habit.streakDates.containsKey(dateString) &&
@@ -90,7 +115,7 @@ class HomePage extends StatelessWidget {
     // final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     final int completedHabit = getToatalCompleted();
-    final int totalHabit = boxHabit.length;
+    final int totalHabit = getTotalHabit();
 
     final int totalTimeUtilizedPercent = gettotalTimeUtilizedPercent();
 
@@ -150,7 +175,9 @@ class HomePage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
+                            color: totalTimeUtilizedPercent > 100
+                                ? Colors.amberAccent
+                                : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         SizedBox(height: 4),
@@ -172,7 +199,7 @@ class HomePage extends StatelessWidget {
                       lineWidth: 8.0,
                       percent: totalHabit == 0
                           ? 0.0
-                          : completedHabit / totalHabit,
+                          : (completedHabit / totalHabit).clamp(0.0, 1.0),
 
                       center: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -187,7 +214,9 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      progressColor: Theme.of(context).colorScheme.secondary,
+                      progressColor: totalTimeUtilizedPercent > 100
+                          ? Colors.amberAccent
+                          : Theme.of(context).colorScheme.secondary,
                       backgroundColor: Theme.of(
                         context,
                       ).colorScheme.onSecondaryContainer.withValues(alpha: 0.1),

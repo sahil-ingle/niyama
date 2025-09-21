@@ -203,6 +203,9 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                     },
 
                     timeWidgetBuilder: (dateTime) {
+                      final hour = dateTime.hour.toString().padLeft(2, '0');
+                      final minute = dateTime.minute.toString().padLeft(2, '0');
+
                       return SizedBox(
                         height: 69,
 
@@ -216,8 +219,13 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
                           ),
                           child: Center(
                             child: Text(
-                              '${_timePicked.hour.toString()} Hour ${_timePicked.minute.toString()} Min',
+                              _timePicked.hour == 0 && _timePicked.minute == 0
+                                  ? "Duration"
+                                  : _timePicked.hour == 0
+                                  ? '$minute Minute'
+                                  : '$hour Hr $minute Min',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: isDarkMode
                                     ? Theme.of(
                                         context,

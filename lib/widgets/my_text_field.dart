@@ -14,6 +14,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: nameController,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         filled: true,
         hintText: hintText,
