@@ -18,6 +18,7 @@ class MyHabitsCard extends StatefulWidget {
     required this.btnPlayPause,
     required this.dislayTime,
     required this.isPaused,
+    required this.isPositive,
     super.key,
   });
 
@@ -30,6 +31,7 @@ class MyHabitsCard extends StatefulWidget {
   final double percent;
   final Map<String, int> streakDates;
 
+  final bool isPositive;
   final int dislayTime;
   final bool isPaused;
 
@@ -51,12 +53,17 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 3,
-      color: colorScheme.surface, // subtle card background
+      color: widget.isPositive
+          ? colorScheme.surface
+          : isDarkMode
+          ? Colors.red
+          : const Color.fromARGB(255, 255, 179, 187), // subtle card background
 
       child: ExpansionTile(
         showTrailingIcon: false,
@@ -117,27 +124,54 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 ),
                 const Spacer(),
 
+                Visibility(
+                  visible: !widget.isPositive,
+                  child: Icon(
+                    FontAwesome.fire_solid,
+                    color:
+                        colorScheme.secondary, // fire color matches error color
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Visibility(
+                  visible: !widget.isPositive,
+                  child: Text(
+                    "${widget.currentStreak} Days",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+
                 /// Timer Display
-                Text(
-                  _formatTime(widget.dislayTime),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onSurface,
+                Visibility(
+                  visible: widget.isPositive,
+                  child: Text(
+                    _formatTime(widget.dislayTime),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurface,
+                    ),
                   ),
                 ),
 
                 const SizedBox(width: 8),
 
                 /// Play / Pause Button
-                GestureDetector(
-                  onTap: widget.btnPlayPause,
-                  child: Icon(
-                    widget.isPaused
-                        ? FontAwesome.circle_pause_solid
-                        : FontAwesome.circle_play_solid,
-                    color: colorScheme.primary,
-                    size: 28,
+                Visibility(
+                  visible: widget.isPositive,
+                  child: GestureDetector(
+                    onTap: widget.btnPlayPause,
+                    child: Icon(
+                      widget.isPaused
+                          ? FontAwesome.circle_pause_solid
+                          : FontAwesome.circle_play_solid,
+                      color: colorScheme.primary,
+                      size: 28,
+                    ),
                   ),
                 ),
               ],
@@ -148,23 +182,35 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
             /// Streak and Stats Icon
             Row(
               children: [
-                Icon(
-                  FontAwesome.fire_solid,
-                  color:
-                      colorScheme.secondary, // fire color matches error color
-                  size: 20,
+                Visibility(
+                  visible: widget.isPositive,
+                  child: Icon(
+                    FontAwesome.fire_solid,
+                    color:
+                        colorScheme.secondary, // fire color matches error color
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  "${widget.currentStreak} Days",
-                  style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
+                Visibility(
+                  visible: widget.isPositive,
+                  child: Text(
+                    "${widget.currentStreak} Days",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                 ),
                 const Spacer(),
-                GestureDetector(
-                  child: Icon(
-                    FontAwesome.chart_simple_solid,
-                    color: colorScheme.secondary,
-                    size: 22,
+                Visibility(
+                  visible: false,
+                  child: GestureDetector(
+                    child: Icon(
+                      FontAwesome.chart_simple_solid,
+                      color: colorScheme.secondary,
+                      size: 22,
+                    ),
                   ),
                 ),
               ],

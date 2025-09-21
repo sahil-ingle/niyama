@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -40,29 +39,42 @@ class HomePage extends StatelessWidget {
   }
 
   Map<DateTime, int> getHeatMapData() {
-    Map<DateTime, int> heatmap = {};
+    final Map<DateTime, int> heatmap = {};
+    final List<Habit> habits = [
+      for (int i = 0; i < boxHabit.length; i++) boxHabit.getAt(i),
+    ];
+
     DateTime currentDate = DateTime.now().subtract(const Duration(days: 69));
-    int habitCount = boxHabit.length;
 
     for (int i = 0; i < 70; i++) {
-      final formattedDate = DateTime(
+      final dateKey = DateTime(
         currentDate.year,
         currentDate.month,
         currentDate.day,
       );
-      final dateString = DateFormat('dd-MM-yyyy').format(currentDate);
+      final dateString =
+          '${currentDate.day.toString().padLeft(2, '0')}-'
+          '${currentDate.month.toString().padLeft(2, '0')}-'
+          '${currentDate.year}';
 
-      for (int j = 0; j < habitCount; j++) {
-        final Habit myHabit = boxHabit.getAt(j);
+      for (final habit in habits) {
+        // Skip if current date is before the habit started
+        if (currentDate.isBefore(habit.startDate)) continue;
 
-        if (myHabit.streakDates.containsKey(dateString)) {
-          // Increment count for this date
-          int currentCount = heatmap[formattedDate] ?? 0;
+        final currentCount = heatmap[dateKey] ?? 0;
 
-          // Only increment if less than or equal to 4
+        if (habit.streakDates.containsKey(dateString) && habit.isPositive) {
+          // Positive habit completed
           if (currentCount < 5) {
-            heatmap[formattedDate] = currentCount + 1;
+            heatmap[dateKey] = currentCount + 1;
           }
+        } else if (!habit.streakDates.containsKey(dateString) &&
+            !habit.isPositive) {
+          // Negative habit missed
+          final count = currentCount < 4
+              ? 5
+              : (currentCount < 9 ? currentCount + 1 : currentCount);
+          heatmap[dateKey] = count;
         }
       }
 
@@ -230,6 +242,12 @@ class HomePage extends StatelessWidget {
                       context,
                     ).colorScheme.primary.withValues(alpha: 0.7),
                     4: Theme.of(context).colorScheme.primary,
+
+                    5: Colors.red.withValues(alpha: 0.2),
+                    6: Colors.red.withValues(alpha: 0.4),
+                    7: Colors.red.withValues(alpha: 0.6),
+                    8: Colors.red.withValues(alpha: 0.8),
+                    9: Colors.red,
                   },
 
                   defaultColor: Theme.of(

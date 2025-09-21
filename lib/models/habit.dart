@@ -18,6 +18,7 @@ class Habit extends HiveObject {
     required this.isPositive,
     required this.isCompleted,
     required this.isPaused,
+    required this.startDate,
   });
 
   @HiveField(0)
@@ -66,4 +67,7 @@ class Habit extends HiveObject {
 
   @HiveField(12)
   bool isPaused = false;
+
+  @HiveField(13)
+  DateTime startDate;
 }

@@ -30,13 +30,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       isPositive: (fields[10] as bool),
       isCompleted: (fields[11] as bool),
       isPaused: (fields[12] as bool),
+      startDate: (fields[13] as DateTime),
     );
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.habitName)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(11)
       ..write(obj.isCompleted)
       ..writeByte(12)
-      ..write(obj.isPaused);
+      ..write(obj.isPaused)
+      ..writeByte(13)
+      ..write(obj.startDate);
   }
 
   @override

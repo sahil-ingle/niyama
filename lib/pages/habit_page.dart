@@ -163,6 +163,7 @@ class _HabitPageState extends State<HabitPage> {
                       goal: myHabit.goalDays,
                       currentStreak: myHabit.currentStreak.toString(),
                       timeAllocated: myHabit.timeAllocated,
+                      isPositive: myHabit.isPositive,
                       habitDays: {},
                       isChecked: myHabit.isCompleted,
                       btnChecked: () {

@@ -83,6 +83,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           isPositive: isPositive,
           isCompleted: false,
           isPaused: false,
+          startDate: DateTime.now(),
         ),
       );
 
@@ -166,86 +167,89 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
             ],
           ),
 
-          SizedBox(height: 12),
+          Visibility(visible: isPositive, child: SizedBox(height: 12)),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              MyTimeUpdateBtn(
-                onChanged: () {
-                  setState(() {
-                    _timePicked = _timePicked.subtract(Duration(minutes: 15));
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                    bottomLeft: Radius.circular(16),
-                    topLeft: Radius.circular(16),
-                  ),
-                ),
-                icon: FontAwesome.minus_solid,
-              ),
-
-              Expanded(
-                child: TimePickerSpinnerPopUp(
-                  initTime: _timePicked,
-                  mode: CupertinoDatePickerMode.time,
-
-                  onChange: (dateTime) {
+          Visibility(
+            visible: isPositive,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MyTimeUpdateBtn(
+                  onChanged: () {
                     setState(() {
-                      _timePicked = dateTime;
+                      _timePicked = _timePicked.subtract(Duration(minutes: 15));
                     });
                   },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(16),
+                      topLeft: Radius.circular(16),
+                    ),
+                  ),
+                  icon: FontAwesome.minus_solid,
+                ),
 
-                  timeWidgetBuilder: (dateTime) {
-                    return SizedBox(
-                      height: 69,
+                Expanded(
+                  child: TimePickerSpinnerPopUp(
+                    initTime: _timePicked,
+                    mode: CupertinoDatePickerMode.time,
 
-                      child: Card(
-                        color: isDarkMode
-                            ? Theme.of(context).colorScheme.secondaryContainer
-                            : Theme.of(context).colorScheme.surface,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(8),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${_timePicked.hour.toString()} Hour ${_timePicked.minute.toString()} Min',
-                            style: TextStyle(
-                              color: isDarkMode
-                                  ? Theme.of(
-                                      context,
-                                    ).colorScheme.onSecondaryContainer
-                                  : Theme.of(context).colorScheme.onSurface,
+                    onChange: (dateTime) {
+                      setState(() {
+                        _timePicked = dateTime;
+                      });
+                    },
+
+                    timeWidgetBuilder: (dateTime) {
+                      return SizedBox(
+                        height: 69,
+
+                        child: Card(
+                          color: isDarkMode
+                              ? Theme.of(context).colorScheme.secondaryContainer
+                              : Theme.of(context).colorScheme.surface,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${_timePicked.hour.toString()} Hour ${_timePicked.minute.toString()} Min',
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? Theme.of(
+                                        context,
+                                      ).colorScheme.onSecondaryContainer
+                                    : Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              MyTimeUpdateBtn(
-                onChanged: () {
-                  setState(() {
-                    _timePicked = _timePicked.add(Duration(minutes: 15));
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.only(
-                    topRight: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                    bottomLeft: Radius.circular(8),
-                    topLeft: Radius.circular(8),
+                      );
+                    },
                   ),
                 ),
-                icon: FontAwesome.plus_solid,
-              ),
-            ],
+
+                MyTimeUpdateBtn(
+                  onChanged: () {
+                    setState(() {
+                      _timePicked = _timePicked.add(Duration(minutes: 15));
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.only(
+                      topRight: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                    ),
+                  ),
+                  icon: FontAwesome.plus_solid,
+                ),
+              ],
+            ),
           ),
 
           SizedBox(height: 12),
