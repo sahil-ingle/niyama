@@ -190,6 +190,7 @@ class _HabitPageState extends State<HabitPage> {
                           }
                         });
                       },
+                      myHabit: myHabit,
                     ),
                   );
                 },

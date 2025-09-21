@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:niyama/models/habit.dart';
+import 'package:niyama/widgets/my_add_date_drop_down.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,6 +22,7 @@ class MyHabitsCard extends StatefulWidget {
     required this.dislayTime,
     required this.isPaused,
     required this.isPositive,
+    required this.myHabit,
     super.key,
   });
 
@@ -37,6 +41,8 @@ class MyHabitsCard extends StatefulWidget {
 
   final Function() btnChecked;
   final Function() btnPlayPause;
+
+  final Habit myHabit;
 
   @override
   State<MyHabitsCard> createState() => _MyHabitsCardState();
@@ -124,56 +130,68 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 ),
                 const Spacer(),
 
-                Visibility(
-                  visible: !widget.isPositive,
-                  child: Icon(
-                    FontAwesome.fire_solid,
-                    color:
-                        colorScheme.secondary, // fire color matches error color
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Visibility(
-                  visible: !widget.isPositive,
-                  child: Text(
-                    "${widget.currentStreak} Days",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                ),
+                widget.percent == 1
+                    ? SizedBox(
+                        height: 50,
+                        width: 120,
+                        child: MyAddDateDropDown(
+                          onChanged: (value) {
+                            setState(() {
+                              widget.myHabit.goalDays += int.parse(
+                                value!.split(" ")[0],
+                              );
+                              widget.myHabit.save();
+                              // addd condition here
+                            });
+                          },
+                        ),
+                      )
+                    : widget.isPositive
+                    ? Row(
+                        children: [
+                          Text(
+                            _formatTime(widget.dislayTime),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          /// Play / Pause Button
+                          GestureDetector(
+                            onTap: widget.btnPlayPause,
+                            child: Icon(
+                              widget.isPaused
+                                  ? FontAwesome.circle_pause_solid
+                                  : FontAwesome.circle_play_solid,
+                              color: colorScheme.primary,
+                              size: 28,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Icon(
+                            FontAwesome.fire_solid,
+                            color: colorScheme
+                                .secondary, // fire color matches error color
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "${widget.currentStreak} Days",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
+                      ),
 
                 /// Timer Display
-                Visibility(
-                  visible: widget.isPositive,
-                  child: Text(
-                    _formatTime(widget.dislayTime),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                /// Play / Pause Button
-                Visibility(
-                  visible: widget.isPositive,
-                  child: GestureDetector(
-                    onTap: widget.btnPlayPause,
-                    child: Icon(
-                      widget.isPaused
-                          ? FontAwesome.circle_pause_solid
-                          : FontAwesome.circle_play_solid,
-                      color: colorScheme.primary,
-                      size: 28,
-                    ),
-                  ),
-                ),
               ],
             ),
 
@@ -203,6 +221,18 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                   ),
                 ),
                 const Spacer(),
+
+                Visibility(
+                  visible: widget.percent == 1,
+                  child: Text(
+                    "🎉 Goal Achieved! Keep Going!",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                ),
+
                 Visibility(
                   visible: false,
                   child: GestureDetector(
