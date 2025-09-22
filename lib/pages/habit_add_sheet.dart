@@ -1,3 +1,4 @@
+import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -5,7 +6,6 @@ import 'package:niyama/models/habit.dart';
 import 'package:niyama/widgets/my_drop_down.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
-import 'package:niyama/widgets/my_time_update_btn.dart';
 import 'package:niyama/widgets/my_toggle.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
@@ -26,6 +26,18 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
   int _selectedHabitIndex = 0;
   bool isPositive = true;
 
+  Time _remidnerTime = Time(
+    hour: DateTime.now().hour,
+    minute: DateTime.now().minute,
+  );
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hourOfPeriod.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period.name.toUpperCase();
+    return "$hour:$minute $period";
+  }
+
   final Map<String, bool> _selectedDaysMap = {
     "MON": false,
     "TUE": false,
@@ -40,6 +52,20 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
     setState(() {
       _selectedDaysMap[day] = !_selectedDaysMap[day]!;
     });
+  }
+
+  DateTime convertTimetoDateTime(Time time) {
+    DateTime now = DateTime.now();
+
+    DateTime convertedTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      time.hour,
+      time.minute,
+    );
+
+    return convertedTime;
   }
 
   void addDataHive() {
@@ -69,7 +95,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           habitName: _habitNameController.text,
           description: _descriptionController.text,
           goalDays: _selectedGoal,
-          reminderTime: DateTime.now(),
+          reminderTime: convertTimetoDateTime(_remidnerTime),
           habitDays: _selectedDaysMap,
           timeAllocated: Duration(
             hours: _timePicked.hour,
@@ -167,99 +193,131 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
             ],
           ),
 
-          Visibility(visible: isPositive, child: SizedBox(height: 12)),
+          SizedBox(height: 12),
 
-          Visibility(
-            visible: isPositive,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MyTimeUpdateBtn(
-                  onChanged: () {
-                    setState(() {
-                      _timePicked = _timePicked.subtract(Duration(minutes: 15));
-                    });
-                  },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // ----------------------------
+              // Duration Picker
+              // ----------------------------
+              Expanded(
+                child: Card(
+                  color: isDarkMode
+                      ? Theme.of(context).colorScheme.secondaryContainer
+                      : Theme.of(context).colorScheme.surface,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                      bottomLeft: Radius.circular(16),
-                      topLeft: Radius.circular(16),
-                    ),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  icon: FontAwesome.minus_solid,
-                ),
+                  margin: EdgeInsets.all(0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    child: TimePickerSpinnerPopUp(
+                      initTime: _timePicked,
+                      mode: CupertinoDatePickerMode.time,
+                      onChange: (dateTime) {
+                        setState(() => _timePicked = dateTime);
+                      },
+                      timeWidgetBuilder: (dateTime) {
+                        final formattedTime =
+                            _timePicked.hour == 0 && _timePicked.minute == 0
+                            ? "Duration"
+                            : _timePicked.hour == 0
+                            ? "${_timePicked.minute} Min"
+                            : "${_timePicked.hour} Hr ${_timePicked.minute} Min";
 
-                Expanded(
-                  child: TimePickerSpinnerPopUp(
-                    initTime: _timePicked,
-                    mode: CupertinoDatePickerMode.time,
-
-                    onChange: (dateTime) {
-                      setState(() {
-                        _timePicked = dateTime;
-                      });
-                    },
-
-                    timeWidgetBuilder: (dateTime) {
-                      final hour = dateTime.hour.toString().padLeft(2, '0');
-                      final minute = dateTime.minute.toString().padLeft(2, '0');
-
-                      return SizedBox(
-                        height: 69,
-
-                        child: Card(
-                          color: isDarkMode
-                              ? Theme.of(context).colorScheme.secondaryContainer
-                              : Theme.of(context).colorScheme.surface,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(8),
-                          ),
-                          child: Center(
-                            child: Text(
-                              _timePicked.hour == 0 && _timePicked.minute == 0
-                                  ? "Duration"
-                                  : _timePicked.hour == 0
-                                  ? '$minute Minute'
-                                  : '$hour Hr $minute Min',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isDarkMode
-                                    ? Theme.of(
-                                        context,
-                                      ).colorScheme.onSecondaryContainer
-                                    : Theme.of(context).colorScheme.onSurface,
-                              ),
+                        return Center(
+                          child: Text(
+                            formattedTime,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: isDarkMode
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer
+                                  : Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                MyTimeUpdateBtn(
-                  onChanged: () {
-                    setState(() {
-                      _timePicked = _timePicked.add(Duration(minutes: 15));
-                    });
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.only(
-                      topRight: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(8),
-                      topLeft: Radius.circular(8),
+                        );
+                      },
                     ),
                   ),
-                  icon: FontAwesome.plus_solid,
                 ),
-              ],
-            ),
+              ),
+
+              SizedBox(width: 12),
+
+              // ----------------------------
+              // Reminder Time Picker
+              // ----------------------------
+              Expanded(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      showPicker(
+                        value: _remidnerTime,
+                        accentColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainer,
+                        sunrise: const TimeOfDay(hour: 6, minute: 0),
+                        sunset: const TimeOfDay(hour: 18, minute: 0),
+                        onChange: (selectedTime) {
+                          setState(() => _remidnerTime = selectedTime);
+                        },
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 0,
+                    color: isDarkMode
+                        ? Theme.of(context).colorScheme.secondaryContainer
+                        : Theme.of(context).colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    margin: EdgeInsets.all(0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 14,
+                      ),
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              FontAwesome.clock_solid,
+                              size: 20,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              _formatTimeOfDay(_remidnerTime),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
 
+          /// Helper method to format TimeOfDay nicely
           SizedBox(height: 12),
 
           Row(
