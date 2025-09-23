@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:niyama/pages/habit_edit_page.dart';
 import 'package:niyama/services/noti_service.dart';
 import 'package:niyama/widgets/my_habits_card.dart';
 
@@ -154,51 +157,91 @@ class _HabitPageState extends State<HabitPage> {
                 itemBuilder: (context, index) {
                   Habit myHabit = boxHabit.getAt(index);
 
-                  return Dismissible(
-                    key: ValueKey(myHabit),
-                    onDismissed: (direction) {
-                      boxHabit.deleteAt(index);
-                      NotiService().cancelAllHabitNotifications(
-                        myHabit.habitName,
-                      );
-                    },
-                    child: MyHabitsCard(
-                      habitName: myHabit.habitName,
-                      goal: myHabit.goalDays,
-                      currentStreak: myHabit.currentStreak.toString(),
-                      timeAllocated: myHabit.timeAllocated,
-                      isPositive: myHabit.isPositive,
-                      habitDays: myHabit.habitDays,
-                      isChecked: myHabit.isCompleted,
-                      btnChecked: () {
-                        setState(() {
-                          myHabit.isCompleted = !myHabit.isCompleted;
-                          increaseDayCount(index, myHabit.timeUtilized);
-                        });
-                      },
-                      percent: myHabit.currentStreak / myHabit.goalDays,
-                      streakDates: myHabit.streakDates,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: Slidable(
+                      key: ValueKey(myHabit),
 
-                      isPaused: myHabit.isPaused,
-                      dislayTime: myHabit.timeAllocated - myHabit.timeUtilized,
-
-                      btnPlayPause: () {
-                        setState(() {
-                          if (!myHabit.isCompleted) {
-                            if (!myHabit.isPaused) {
-                              _startTimer(index);
-                              NotiService().showNotification(
-                                title: "Timer Started",
-                                body: myHabit.habitName,
+                      startActionPane: ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            borderRadius: BorderRadius.circular(16),
+                            onPressed: (key) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HabitEditPage(),
+                                ),
                               );
-                            } else {
-                              _pauseTimer(index);
+                            },
+                            icon: FontAwesome.pen_to_square_solid,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.9),
+                          ),
+                        ],
+                      ),
+
+                      endActionPane: ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            borderRadius: BorderRadius.circular(16),
+                            onPressed: (key) {
+                              boxHabit.deleteAt(index);
+                              NotiService().cancelAllHabitNotifications(
+                                myHabit.habitName,
+                              );
+                            },
+                            icon: FontAwesome.trash_can_solid,
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        ],
+                      ),
+
+                      child: MyHabitsCard(
+                        habitName: myHabit.habitName,
+                        goal: myHabit.goalDays,
+                        currentStreak: myHabit.currentStreak.toString(),
+                        timeAllocated: myHabit.timeAllocated,
+                        isPositive: myHabit.isPositive,
+                        habitDays: myHabit.habitDays,
+                        isChecked: myHabit.isCompleted,
+                        btnChecked: () {
+                          setState(() {
+                            myHabit.isCompleted = !myHabit.isCompleted;
+                            increaseDayCount(index, myHabit.timeUtilized);
+                          });
+                        },
+                        percent: myHabit.currentStreak / myHabit.goalDays,
+                        streakDates: myHabit.streakDates,
+
+                        isPaused: myHabit.isPaused,
+                        dislayTime:
+                            myHabit.timeAllocated - myHabit.timeUtilized,
+
+                        btnPlayPause: () {
+                          setState(() {
+                            if (!myHabit.isCompleted) {
+                              if (!myHabit.isPaused) {
+                                _startTimer(index);
+                                NotiService().showNotification(
+                                  title: "Timer Started",
+                                  body: myHabit.habitName,
+                                );
+                              } else {
+                                _pauseTimer(index);
+                              }
+                              myHabit.isPaused = !myHabit.isPaused;
                             }
-                            myHabit.isPaused = !myHabit.isPaused;
-                          }
-                        });
-                      },
-                      myHabit: myHabit,
+                          });
+                        },
+                        myHabit: myHabit,
+                      ),
                     ),
                   );
                 },
