@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:niyama/services/noti_service.dart';
 import 'package:niyama/widgets/my_drop_down.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
@@ -68,6 +69,36 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
     return convertedTime;
   }
 
+  int generateHabitIdFromName(String name) {
+    return name.codeUnits.fold(0, (prev, char) => prev + char);
+  }
+
+  int generateNotificationId(String habitName, int weekdayIndex) {
+    int habitBaseId = generateHabitIdFromName(habitName);
+    return (habitBaseId * 10) + weekdayIndex; // Combine habit and day
+  }
+
+  void addReminder() {
+    final List<String> days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
+    for (int i = 0; i < 7; i++) {
+      if (_selectedDaysMap[days[i]] == true) {
+        final int uniqueId = generateNotificationId(
+          _habitNameController.text,
+          i,
+        );
+        NotiService().scheduleReminder(
+          title: _habitNameController.text,
+          body: 'Don\'t Procrastinate',
+          id: uniqueId,
+          hour: _remidnerTime.hour,
+          minute: _remidnerTime.minute,
+          weekday: i + 1,
+        );
+      }
+    }
+  }
+
   void addDataHive() {
     if (_habitNameController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
@@ -112,6 +143,8 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           startDate: DateTime.now(),
         ),
       );
+
+      addReminder();
 
       Navigator.pop(context);
     }

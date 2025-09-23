@@ -5,6 +5,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:niyama/services/noti_service.dart';
 import 'package:niyama/widgets/my_habits_card.dart';
 
 class HabitPage extends StatefulWidget {
@@ -183,6 +184,10 @@ class _HabitPageState extends State<HabitPage> {
                           if (!myHabit.isCompleted) {
                             if (!myHabit.isPaused) {
                               _startTimer(index);
+                              NotiService().showNotification(
+                                title: "Timer Started",
+                                body: myHabit.habitName,
+                              );
                             } else {
                               _pauseTimer(index);
                             }
