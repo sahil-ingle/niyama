@@ -125,4 +125,20 @@ class NotiService {
 
     return scheduledDate;
   }
+
+  int generateHabitIdFromName(String name) {
+    return name.codeUnits.fold(0, (prev, char) => prev + char);
+  }
+
+  int generateNotificationId(String habitName, int weekdayIndex) {
+    int habitBaseId = generateHabitIdFromName(habitName);
+    return (habitBaseId * 10) + weekdayIndex; // Combine habit and day
+  }
+
+  void cancelAllHabitNotifications(String habitName) {
+    for (int i = 0; i < 7; i++) {
+      final int notificationId = generateNotificationId(habitName, i);
+      notificationsPlugin.cancel(notificationId);
+    }
+  }
 }

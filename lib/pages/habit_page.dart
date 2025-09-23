@@ -158,6 +158,9 @@ class _HabitPageState extends State<HabitPage> {
                     key: ValueKey(myHabit),
                     onDismissed: (direction) {
                       boxHabit.deleteAt(index);
+                      NotiService().cancelAllHabitNotifications(
+                        myHabit.habitName,
+                      );
                     },
                     child: MyHabitsCard(
                       habitName: myHabit.habitName,
