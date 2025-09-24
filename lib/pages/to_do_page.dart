@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:niyama/models/boxes.dart';
 import 'package:niyama/widgets/my_to_do_card.dart';
 
@@ -30,19 +32,37 @@ class ToDoPage extends StatelessWidget {
           valueListenable: boxToDo.listenable(),
           builder: (context, boxToDo, child) {
             if (boxToDo.length <= 0) {
-              return SliverList.list(
-                children: [Center(child: Text("No To-Do"))],
+              return SliverFillRemaining(
+                child: Center(child: Text("No To-Do")),
               );
             } else {
               return SliverList.builder(
                 itemCount: boxToDo.length,
                 itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: ValueKey(boxToDo.getAt(index)),
-                    onDismissed: (direction) {
-                      boxToDo.deleteAt(index);
-                    },
-                    child: MyToDoCard(text: boxToDo.getAt(index)),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: Slidable(
+                      key: ValueKey(boxToDo.getAt(index)),
+
+                      endActionPane: ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            borderRadius: BorderRadius.circular(16),
+                            onPressed: (key) {
+                              boxToDo.deleteAt(index);
+                            },
+                            icon: FontAwesome.trash_can_solid,
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        ],
+                      ),
+
+                      child: MyToDoCard(text: boxToDo.getAt(index)),
+                    ),
                   );
                 },
               );

@@ -121,7 +121,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
       );
     } else {
       boxHabit.put(
-        'key_${DateTime.now()}_${_habitNameController.text}',
+        'key_${_habitNameController.text}',
         Habit(
           habitName: _habitNameController.text,
           description: _descriptionController.text,

@@ -69,6 +69,31 @@ class NotiService {
     return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
+  Future<void> sheduleToDo({
+    required int id,
+    required String title,
+    String? body,
+    required DateTime scheduledDate, // exact date and time
+  }) async {
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminder_channel_id',
+          'Reminders',
+          channelDescription: 'Reminder at a specific date and time',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
+  }
+
   Future<void> scheduleReminder({
     required int id,
     required String title,

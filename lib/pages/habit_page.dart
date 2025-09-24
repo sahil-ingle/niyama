@@ -148,14 +148,37 @@ class _HabitPageState extends State<HabitPage> {
           valueListenable: boxHabit.listenable(),
           builder: (context, boxHabit, widget) {
             if (boxHabit.length <= 0) {
-              return SliverList.list(
-                children: [Center(child: Text("No Habits"))],
+              return SliverFillRemaining(
+                child: Center(child: Text("No Habits")),
               );
             } else {
+              final String today = DateFormat(
+                'EEE',
+              ).format(DateTime.now()).toUpperCase();
+
+              List<int> sortedIndexes = List.generate(
+                boxHabit.length,
+                (i) => i,
+              );
+
+              sortedIndexes.sort((a, b) {
+                final Habit habitA = boxHabit.getAt(a)!;
+                final Habit habitB = boxHabit.getAt(b)!;
+
+                final bool aToday = habitA.habitDays[today] ?? false;
+                final bool bToday = habitB.habitDays[today] ?? false;
+
+                // Habits active today come first
+                if (aToday && !bToday) return -1;
+                if (!aToday && bToday) return 1;
+                return 0; // keep original order if both same
+              });
+
               return SliverList.builder(
                 itemCount: boxHabit.length,
                 itemBuilder: (context, index) {
-                  Habit myHabit = boxHabit.getAt(index);
+                  final int hiveIndex = sortedIndexes[index];
+                  final Habit myHabit = boxHabit.getAt(hiveIndex)!;
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(
@@ -175,7 +198,7 @@ class _HabitPageState extends State<HabitPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      HabitEditPage(index: index),
+                                      HabitEditPage(index: hiveIndex),
                                 ),
                               );
                             },
@@ -193,7 +216,7 @@ class _HabitPageState extends State<HabitPage> {
                           SlidableAction(
                             borderRadius: BorderRadius.circular(16),
                             onPressed: (key) {
-                              boxHabit.deleteAt(index);
+                              boxHabit.deleteAt(hiveIndex);
                               NotiService().cancelAllHabitNotifications(
                                 myHabit.habitName,
                               );
@@ -215,7 +238,7 @@ class _HabitPageState extends State<HabitPage> {
                         btnChecked: () {
                           setState(() {
                             myHabit.isCompleted = !myHabit.isCompleted;
-                            increaseDayCount(index, myHabit.timeUtilized);
+                            increaseDayCount(hiveIndex, myHabit.timeUtilized);
                           });
                         },
                         percent: myHabit.currentStreak / myHabit.goalDays,
@@ -229,13 +252,13 @@ class _HabitPageState extends State<HabitPage> {
                           setState(() {
                             if (!myHabit.isCompleted) {
                               if (!myHabit.isPaused) {
-                                _startTimer(index);
+                                _startTimer(hiveIndex);
                                 NotiService().showNotification(
                                   title: "Timer Started",
                                   body: myHabit.habitName,
                                 );
                               } else {
-                                _pauseTimer(index);
+                                _pauseTimer(hiveIndex);
                               }
                               myHabit.isPaused = !myHabit.isPaused;
                             }
