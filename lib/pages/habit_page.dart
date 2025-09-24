@@ -174,7 +174,8 @@ class _HabitPageState extends State<HabitPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HabitEditPage(),
+                                  builder: (context) =>
+                                      HabitEditPage(index: index),
                                 ),
                               );
                             },

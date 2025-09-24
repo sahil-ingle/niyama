@@ -2,9 +2,11 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
-  const MyDropDown({required this.onChanged, super.key});
+  const MyDropDown({this.hintText, required this.onChanged, super.key});
 
   final Function(String?)? onChanged;
+
+  final String? hintText;
 
   @override
   State<MyDropDown> createState() => _MyDropDownState();
@@ -15,7 +17,7 @@ class _MyDropDownState extends State<MyDropDown> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return CustomDropdown(
-      hintText: "Goal",
+      hintText: widget.hintText == null ? "Goal" : '${widget.hintText} days',
 
       items: ['7 days', '21 days', "30 days", "90 days", "365 days"],
       onChanged: widget.onChanged,
