@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:niyama/pages/habit_analysis_page.dart';
 import 'package:niyama/widgets/my_add_date_drop_down.dart';
 
 import 'package:percent_indicator/percent_indicator.dart';
@@ -204,6 +205,25 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                               color: colorScheme.onSurface,
                             ),
                           ),
+                          const SizedBox(width: 8),
+
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HabitAnalysisPage(
+                                    myHabit: widget.myHabit,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              FontAwesome.chart_simple_solid,
+                              color: colorScheme.secondary,
+                              size: 22,
+                            ),
+                          ),
                         ],
                       ),
 
@@ -250,8 +270,17 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 ),
 
                 Visibility(
-                  visible: false,
+                  visible: widget.isPositive,
                   child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              HabitAnalysisPage(myHabit: widget.myHabit),
+                        ),
+                      );
+                    },
                     child: Icon(
                       FontAwesome.chart_simple_solid,
                       color: colorScheme.secondary,
@@ -268,6 +297,8 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
             LinearPercentIndicator(
               barRadius: const Radius.circular(16),
               lineHeight: 12,
+              animation: true,
+              animationDuration: 200,
               percent: widget.percent,
               padding: EdgeInsets.zero,
               progressColor: colorScheme.secondary,
