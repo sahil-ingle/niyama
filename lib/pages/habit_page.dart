@@ -91,26 +91,31 @@ class _HabitPageState extends State<HabitPage> {
 
   void _startTimer(int index) {
     Habit myHabit = boxHabit.getAt(index);
+
+    // Cancel any existing timer
     _timers[index]?.cancel();
+
     _timers[index] = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (myHabit.timeAllocated != myHabit.timeUtilized &&
+      if (myHabit.timeUtilized < myHabit.timeAllocated &&
           !myHabit.isCompleted) {
-        setState(() {
-          myHabit.timeUtilized++;
-        });
+        myHabit.timeUtilized++;
+        myHabit.save();
+        setState(
+          () {},
+        ); // Only triggers UI update without mutating the object here
       } else {
-        setState(() {
-          myHabit.isCompleted = true;
-          myHabit.isPaused = false;
-          if (myHabit.timeAllocated == myHabit.timeUtilized) {
-            increaseDayCount(index, myHabit.timeUtilized);
-          }
-        });
+        myHabit.isCompleted = true;
+        myHabit.isPaused = false;
+        myHabit.save();
+
+        if (myHabit.timeUtilized == myHabit.timeAllocated) {
+          increaseDayCount(index, myHabit.timeUtilized);
+        }
 
         _timers[index]?.cancel();
       }
-      myHabit.save();
     });
+
     setState(() {
       myHabit.isPaused = false;
     });
@@ -118,10 +123,11 @@ class _HabitPageState extends State<HabitPage> {
 
   void _pauseTimer(int index) {
     Habit myHabit = boxHabit.getAt(index);
-    _timers[index]?.cancel();
-    setState(() => myHabit.isPaused = true);
 
+    _timers[index]?.cancel();
+    myHabit.isPaused = true;
     myHabit.save();
+    setState(() {});
   }
 
   @override

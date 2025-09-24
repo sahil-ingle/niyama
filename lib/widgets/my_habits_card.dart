@@ -207,7 +207,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                           ),
                           const SizedBox(width: 8),
 
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -220,7 +220,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                             },
                             child: Icon(
                               FontAwesome.chart_simple_solid,
-                              color: colorScheme.secondary,
+                              color: colorScheme.onSecondaryContainer,
                               size: 22,
                             ),
                           ),
@@ -271,7 +271,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
 
                 Visibility(
                   visible: widget.isPositive,
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -283,7 +283,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                     },
                     child: Icon(
                       FontAwesome.chart_simple_solid,
-                      color: colorScheme.secondary,
+                      color: colorScheme.onSecondaryContainer,
                       size: 22,
                     ),
                   ),
