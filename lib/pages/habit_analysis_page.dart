@@ -159,7 +159,7 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                                 color: Theme.of(context)
                                     .colorScheme
                                     .onSecondaryContainer
-                                    .withOpacity(0.7),
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                             SizedBox(height: 8),
@@ -208,7 +208,7 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                                 color: Theme.of(context)
                                     .colorScheme
                                     .onSecondaryContainer
-                                    .withOpacity(0.7),
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                             SizedBox(height: 8),
@@ -257,9 +257,10 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                           'Total Minute Completed',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSecondaryContainer.withOpacity(0.7),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                         SizedBox(height: 8),

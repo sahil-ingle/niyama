@@ -32,7 +32,6 @@ class _HabitEditPageState extends State<HabitEditPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     myHabit = boxHabit.getAt(widget.index);
     _selectedGoal = myHabit.goalDays;
     isPositive = myHabit.isPositive;

@@ -41,10 +41,8 @@ class NotiService {
             ?.requestNotificationsPermission() ??
         false) {
       // Permission granted
-      print("Notification permission granted");
     } else {
       // Permission denied
-      print("Notification permission denied");
     }
   }
 

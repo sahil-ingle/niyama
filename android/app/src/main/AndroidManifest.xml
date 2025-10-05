@@ -7,7 +7,7 @@
 
 
     <application
-        android:label="niyama"
+        android:label="Niyama"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
