@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:niyama/widgets/my_elevated_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,6 +15,15 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isDarkMode = true;
   Box<String> myProfile = Hive.box<String>('profile');
+  late Box<int> myThemeColor;
+  late Color selectedColor;
+
+  @override
+  void initState() {
+    super.initState();
+    myThemeColor = Hive.box<int>('themeColor');
+    selectedColor = Color(myThemeColor.get("color") ?? Colors.white.value);
+  }
 
   final _nameController = TextEditingController();
 
@@ -20,6 +31,39 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isDarkMode = value;
     });
+  }
+
+  void changeSeedColor() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Select Color"),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: selectedColor,
+            onColorChanged: (pickerColor) {
+              setState(() {
+                selectedColor = pickerColor;
+              });
+            },
+          ),
+        ),
+        actions: [
+          MyElevatedBtn(
+            fixedSize: Size(double.infinity, 52),
+            text: "Done",
+            onTap: () {
+              myThemeColor.put("color", selectedColor.value);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('To see effect Reset the App')),
+              );
+
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   void showDialogBox() {
@@ -109,9 +153,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 8),
 
                   Divider(indent: 20, endIndent: 20),
+
+                  SizedBox(height: 8),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -147,7 +193,49 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 8),
+
+                  Divider(indent: 20, endIndent: 20),
+
+                  SizedBox(height: 8),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Theme Color",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Text(
+                              "Change the look of your \napp ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        MyElevatedBtn(
+                          text: "Select",
+                          onTap: changeSeedColor,
+                          fixedSize: Size(100, 52),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 24),
                 ],
               ),
             ),

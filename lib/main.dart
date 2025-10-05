@@ -21,6 +21,7 @@ void main() async {
   await Hive.openBox<String>('dateBox');
   await Hive.openBox<String>('profile');
   boxToDo = await Hive.openBox<String>('to-do');
+  await Hive.openBox<int>('themeColor');
 
   NotiService().initNotification();
   runApp(const MainApp());

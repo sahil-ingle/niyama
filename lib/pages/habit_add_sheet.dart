@@ -5,6 +5,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:niyama/models/habit.dart';
 import 'package:niyama/services/noti_service.dart';
 import 'package:niyama/widgets/my_drop_down.dart';
+import 'package:niyama/widgets/my_elevated_btn.dart';
 import 'package:niyama/widgets/my_filled_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
 import 'package:niyama/widgets/my_toggle.dart';
@@ -408,21 +409,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           ),
           SizedBox(height: 28),
 
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              fixedSize: Size(160, 52),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(20),
-              ),
-            ),
-
-            onPressed: addDataHive,
-            child: Text(
-              "Add Habit",
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-          ),
+          MyElevatedBtn(text: "Add Habit", onTap: addDataHive),
         ],
       ),
     );
