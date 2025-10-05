@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -63,13 +64,33 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
     return (totalCompletedSecond / 60).toInt();
   }
 
+  // Convert "dd-MM-yyyy" to "dd-MM"
+  String formatDate(String dateStr) {
+    final parts = dateStr.split('-'); // ["25", "10", "2025"]
+    return "${parts[0]}-${parts[1]}";
+  }
+
+  // Convert seconds to minutes
+  double secondsToMinutes(double seconds) {
+    return seconds / 60;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List<String> dates = widget.myHabit.streakDates.keys
+        .map(formatDate)
+        .toList();
+
+    final List<double> timeUtilized = widget.myHabit.streakDates.values
+        .map((s) => secondsToMinutes(s.toDouble()))
+        .toList();
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
+            automaticallyImplyLeading: false,
             expandedHeight: 160,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             flexibleSpace: FlexibleSpaceBar(
@@ -288,6 +309,68 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                   ),
                 ),
               ),
+
+              SizedBox(
+                height: 250,
+                child: Card(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 28,
+                      bottom: 12,
+                      left: 12,
+                      right: 28,
+                    ),
+                    child: BarChart(
+                      BarChartData(
+                        minY: 0,
+
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(show: false),
+
+                        titlesData: FlTitlesData(
+                          show: true,
+
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (double value, TitleMeta meta) {
+                                return Text(dates[value.toInt()]);
+                              },
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+
+                        barGroups: List.generate(timeUtilized.length, (index) {
+                          return BarChartGroupData(
+                            x: index,
+                            barRods: [
+                              BarChartRodData(
+                                toY: timeUtilized[index],
+
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 20,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
             ],
           ),
         ],
