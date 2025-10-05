@@ -162,6 +162,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
           isCompleted: myHabit.isCompleted,
           isPaused: myHabit.isPaused,
           startDate: myHabit.startDate,
+          lastStartTime: null,
         ),
       );
 

@@ -142,6 +142,7 @@ class _HabitAddSheetState extends State<HabitAddSheet> {
           isCompleted: false,
           isPaused: false,
           startDate: DateTime.now(),
+          lastStartTime: null,
         ),
       );
 

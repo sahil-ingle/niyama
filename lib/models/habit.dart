@@ -19,6 +19,7 @@ class Habit extends HiveObject {
     required this.isCompleted,
     required this.isPaused,
     required this.startDate,
+    required this.lastStartTime,
   });
 
   @HiveField(0)
@@ -70,4 +71,7 @@ class Habit extends HiveObject {
 
   @HiveField(13)
   DateTime startDate;
+
+  @HiveField(14)
+  int? lastStartTime;
 }

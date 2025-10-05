@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tzData;
 
 class NotiService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -65,6 +66,45 @@ class NotiService {
     String? body,
   }) async {
     return notificationsPlugin.show(id, title, body, notificationDetails());
+  }
+
+  Future<void> showNotificationAtTime({
+    int id = 0,
+    String? title,
+    String? body,
+    required int hour,
+    required int minute,
+  }) async {
+    // Initialize timezone data
+    tzData.initializeTimeZones();
+    final now = tz.TZDateTime.now(tz.local);
+
+    // Schedule for today at the given hour and minute
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    // If the scheduled time has already passed today, optionally schedule for tomorrow
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(Duration(days: 1));
+    }
+
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails(),
+
+      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: AndroidScheduleMode
+          .exactAllowWhileIdle, // Optional: repeat daily at same time
+    );
   }
 
   Future<void> sheduleToDo({
