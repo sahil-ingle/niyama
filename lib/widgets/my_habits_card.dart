@@ -303,6 +303,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
               lineHeight: 12,
               animation: true,
               animationDuration: 400,
+              animateFromLastPercent: true,
               percent: widget.percent,
               padding: EdgeInsets.zero,
               progressColor: colorScheme.secondary,
