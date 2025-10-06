@@ -12,7 +12,6 @@ class MyAddDateDropDown extends StatefulWidget {
 class _MyAddDateDropDownState extends State<MyAddDateDropDown> {
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return CustomDropdown(
       hintText: "Extend",
 
@@ -21,28 +20,18 @@ class _MyAddDateDropDownState extends State<MyAddDateDropDown> {
 
       decoration: CustomDropdownDecoration(
         closedBorderRadius: BorderRadius.circular(16),
-        closedFillColor: isDarkMode
-            ? Theme.of(context).colorScheme.secondaryContainer
-            : Theme.of(context).colorScheme.surface,
-        expandedFillColor: isDarkMode
-            ? Theme.of(context).colorScheme.secondaryContainer
-            : Theme.of(context).colorScheme.surface,
+        closedFillColor: Theme.of(context).colorScheme.secondaryContainer,
+        expandedFillColor: Theme.of(context).colorScheme.secondaryContainer,
         hintStyle: TextStyle(
-          color: isDarkMode
-              ? Theme.of(context).colorScheme.onSecondaryContainer
-              : Theme.of(context).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
           fontSize: 16,
         ),
         headerStyle: TextStyle(
-          color: isDarkMode
-              ? Theme.of(context).colorScheme.onSecondaryContainer
-              : Theme.of(context).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
           fontSize: 16,
         ),
         listItemStyle: TextStyle(
-          color: isDarkMode
-              ? Theme.of(context).colorScheme.onSecondaryContainer
-              : Theme.of(context).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
           fontSize: 16,
         ),
       ),

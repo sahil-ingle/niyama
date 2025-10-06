@@ -77,11 +77,22 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> dates = widget.myHabit.streakDates.keys
-        .map(formatDate)
-        .toList();
+    // Get the keys and values as lists
+    final allDates = widget.myHabit.streakDates.keys.toList();
+    final allValues = widget.myHabit.streakDates.values.toList();
 
-    final List<double> timeUtilized = widget.myHabit.streakDates.values
+    // Take the latest 5 entries
+    final latestDates = allDates.length > 5
+        ? allDates.sublist(allDates.length - 5)
+        : allDates;
+
+    final latestValues = allValues.length > 5
+        ? allValues.sublist(allValues.length - 5)
+        : allValues;
+
+    // Convert them to desired formats
+    final List<String> dates = latestDates.map(formatDate).toList();
+    final List<double> timeUtilized = latestValues
         .map((s) => secondsToMinutes(s.toDouble()))
         .toList();
 
@@ -262,49 +273,52 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                 ],
               ),
 
-              Expanded(
-                child: Card(
-                  margin: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total Minute Completed',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer
-                                .withValues(alpha: 0.7),
+              Visibility(
+                visible: widget.myHabit.isPositive,
+                child: Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Total Minute Completed',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer
+                                  .withValues(alpha: 0.7),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(
-                              FontAwesome
-                                  .hourglass_half_solid, // Fire icon for current streak
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              '${getTotalTimeUtilized().toString()} Minutes',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(
+                                FontAwesome
+                                    .hourglass_half_solid, // Fire icon for current streak
                                 color: Theme.of(context).colorScheme.primary,
+                                size: 20,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              SizedBox(width: 8),
+                              Text(
+                                '${getTotalTimeUtilized().toString()} Minutes',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -313,7 +327,7 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
               SizedBox(
                 height: 250,
                 child: Card(
-                  margin: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),

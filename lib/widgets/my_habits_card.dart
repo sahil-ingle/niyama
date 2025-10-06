@@ -248,15 +248,17 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                 const SizedBox(width: 8),
                 Visibility(
                   visible: widget.isPositive,
-                  child: Text(
-                    "${widget.currentStreak} Days",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: colorScheme.onSurface,
+                  child: Visibility(
+                    visible: widget.percent != 1,
+                    child: Text(
+                      "${widget.currentStreak} Days",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
-                const Spacer(),
 
                 Visibility(
                   visible: widget.percent == 1,
@@ -268,6 +270,8 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                     ),
                   ),
                 ),
+
+                const Spacer(),
 
                 Visibility(
                   visible: widget.isPositive,
@@ -298,7 +302,7 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
               barRadius: const Radius.circular(16),
               lineHeight: 12,
               animation: true,
-              animationDuration: 200,
+              animationDuration: 400,
               percent: widget.percent,
               padding: EdgeInsets.zero,
               progressColor: colorScheme.secondary,
