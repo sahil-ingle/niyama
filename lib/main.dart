@@ -6,6 +6,8 @@ import 'package:niyama/models/boxes.dart';
 import 'package:niyama/services/noti_service.dart';
 import 'package:niyama/theme/dark_theme.dart';
 import 'package:niyama/theme/light_theme.dart';
+import 'package:niyama/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/standalone.dart' as tz;
 
@@ -20,6 +22,7 @@ void main() async {
   boxHabit = await Hive.openBox<Habit>('habit');
   await Hive.openBox<String>('dateBox');
   await Hive.openBox<String>('profile');
+  await Hive.openBox<bool>('isDarkTheme');
   boxToDo = await Hive.openBox<String>('to-do');
   await Hive.openBox<int>('themeColor');
 
@@ -32,10 +35,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: NavigationPage(),
-      theme: lightThemeData,
-      darkTheme: darkThemeData,
+    return ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context, _) {
+        final themeProvider = Provider.of<ThemeProvider>(context);
+        return MaterialApp(
+          home: NavigationPage(),
+          themeMode: themeProvider.themeMode,
+          theme: lightThemeData,
+          darkTheme: darkThemeData,
+        );
+      },
     );
   }
 }

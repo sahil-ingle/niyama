@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'light_theme.dart';
-import 'dark_theme.dart';
+import 'package:hive/hive.dart';
 
 class ThemeProvider with ChangeNotifier {
-  // Initial theme
-  ThemeData _themeData = lightThemeData;
+  late Box<bool> isDarkThemeBox;
 
-  // Getter
-  ThemeData get themeData => _themeData;
-
-  // Setter
-  set themeData(ThemeData themeData) {
-    _themeData = themeData;
-    notifyListeners(); // notify listeners whenever theme changes
+  ThemeProvider() {
+    isDarkThemeBox = Hive.box<bool>('isDarkTheme');
+    bool isDark = isDarkThemeBox.get('isDark', defaultValue: false)!;
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
   }
 
-  // Toggle between light and dark
-  void toggleTheme() {
-    if (_themeData == lightThemeData) {
-      themeData = darkThemeData;
-    } else {
-      themeData = lightThemeData;
-    }
+  late ThemeMode themeMode;
+
+  bool get isDarkMode => themeMode == ThemeMode.dark;
+
+  // Toggle between light and dark mode
+  void toggleTheme(bool isOn) {
+    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+    isDarkThemeBox.put('isDark', isOn);
+    notifyListeners();
   }
 }

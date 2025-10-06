@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:niyama/theme/theme_provider.dart';
 import 'package:niyama/widgets/my_elevated_btn.dart';
 import 'package:niyama/widgets/my_text_field.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,7 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _isDarkMode = true;
   Box<String> myProfile = Hive.box<String>('profile');
   late Box<int> myThemeColor;
   late Color selectedColor;
@@ -26,12 +27,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   final _nameController = TextEditingController();
-
-  void changeTheme(bool value) {
-    setState(() {
-      _isDarkMode = value;
-    });
-  }
 
   void changeSeedColor() {
     showDialog(
@@ -96,6 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -187,8 +183,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         Spacer(),
                         Switch(
-                          value: _isDarkMode,
-                          onChanged: (value) => changeTheme(value),
+                          value: themeProvider.isDarkMode,
+                          onChanged: (value) {
+                            final provider = Provider.of<ThemeProvider>(
+                              context,
+                              listen: false,
+                            );
+                            provider.toggleTheme(value);
+                          },
                         ),
                       ],
                     ),
