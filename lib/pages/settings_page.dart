@@ -191,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             Text(
-                              "Add your Name",
+                              "Set your name",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(
@@ -231,7 +231,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             Text(
-                              "Change the look of your \napp ",
+                              "Customize your app’s \nappearance ",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(
@@ -273,7 +273,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             Text(
-                              "Change to theme of your app \nLight or Dark",
+                              "Switch between Light & \nDark modes",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(
@@ -320,7 +320,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             Text(
-                              "Add Applock to secure \nyour Habits",
+                              "Keep your habits safe",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(
