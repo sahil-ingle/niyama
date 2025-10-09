@@ -17,7 +17,6 @@ class _MyToDoCardState extends State<MyToDoCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 3,
 
-      // subtle card background
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Align(
