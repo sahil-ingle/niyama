@@ -125,20 +125,22 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text("Enter Your Name"),
         content: MyTextField(nameController: _nameController, hintText: "Name"),
         actions: [
-          OutlinedButton(
-            onPressed: () {
-              final enteredName = _nameController.text.trim();
-              if (enteredName.isNotEmpty) {
-                myProfile.put("name", enteredName);
+          Center(
+            child: MyElevatedBtn(
+              text: "Update",
+              onTap: () {
+                final enteredName = _nameController.text.trim();
+                if (enteredName.isNotEmpty) {
+                  myProfile.put("name", enteredName);
 
-                Navigator.pop(ctx);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Please enter a valid name")),
-                );
-              }
-            },
-            child: Text("Submit"),
+                  Navigator.pop(ctx);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please enter a valid name")),
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),

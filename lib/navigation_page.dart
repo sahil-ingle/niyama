@@ -5,6 +5,7 @@ import 'package:niyama/pages/home_page.dart';
 import 'package:niyama/pages/settings_page.dart';
 import 'package:niyama/pages/to_do_page.dart';
 import 'package:niyama/pages/habit_add_sheet.dart';
+import 'package:niyama/widgets/my_elevated_btn.dart';
 import 'package:niyama/widgets/my_nav_bar.dart';
 import 'package:niyama/widgets/my_text_field.dart';
 
@@ -43,21 +44,23 @@ class _NavigationPageState extends State<NavigationPage> {
           hintText: "To Do",
         ),
         actions: [
-          OutlinedButton(
-            onPressed: () {
-              final enteredName = _toDoController.text.trim();
-              if (enteredName.isNotEmpty) {
-                boxToDo.put('key_${DateTime.now()}', enteredName);
-                _toDoController.clear();
+          Center(
+            child: MyElevatedBtn(
+              text: "Add To-Do",
+              onTap: () {
+                final enteredName = _toDoController.text.trim();
+                if (enteredName.isNotEmpty) {
+                  boxToDo.put('key_${DateTime.now()}', enteredName);
+                  _toDoController.clear();
 
-                Navigator.pop(ctx);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Please enter a valid To do")),
-                );
-              }
-            },
-            child: Text("Submit"),
+                  Navigator.pop(ctx);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please enter a valid To do")),
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),
