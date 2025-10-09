@@ -121,62 +121,60 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
           ),
           SliverList.list(
             children: [
-              Expanded(
-                child: Card(
-                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Progress Over Goal',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer
-                                .withValues(alpha: 0.7),
+              Card(
+                margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Progress Over Goal',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer
+                              .withValues(alpha: 0.7),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.myHabit.currentStreak} / ${widget.myHabit.goalDays} days',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${widget.myHabit.currentStreak} / ${widget.myHabit.goalDays} days',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                            SizedBox(height: 8),
+                          SizedBox(height: 8),
 
-                            LinearPercentIndicator(
-                              barRadius: const Radius.circular(16),
-                              lineHeight: 12,
-                              animation: true,
-                              animationDuration: 400,
-                              animateFromLastPercent: true,
-                              percent: percent,
-                              padding: EdgeInsets.zero,
-                              progressColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer
-                                  .withValues(alpha: 0.1),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          LinearPercentIndicator(
+                            barRadius: const Radius.circular(16),
+                            lineHeight: 12,
+                            animation: true,
+                            animationDuration: 400,
+                            animateFromLastPercent: true,
+                            percent: percent,
+                            padding: EdgeInsets.zero,
+                            progressColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer
+                                .withValues(alpha: 0.1),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -325,50 +323,48 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
 
               Visibility(
                 visible: widget.myHabit.isPositive,
-                child: Expanded(
-                  child: Card(
-                    margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Total Minute Completed',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryContainer
-                                  .withValues(alpha: 0.7),
+                child: Card(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total Minute Completed',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer
+                                .withValues(alpha: 0.7),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              FontAwesome
+                                  .hourglass_half_solid, // Fire icon for current streak
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 20,
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(
-                                FontAwesome
-                                    .hourglass_half_solid, // Fire icon for current streak
+                            SizedBox(width: 8),
+                            Text(
+                              '${getTotalTimeUtilized().toString()} Minutes',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.primary,
-                                size: 20,
                               ),
-                              SizedBox(width: 8),
-                              Text(
-                                '${getTotalTimeUtilized().toString()} Minutes',
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -434,8 +430,9 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
                                       int index = value.toInt();
-                                      if (index < 0 || index >= dates.length)
+                                      if (index < 0 || index >= dates.length) {
                                         return const SizedBox();
+                                      }
                                       return Text(
                                         dates[index],
                                         style: const TextStyle(fontSize: 12),
@@ -475,7 +472,7 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                                       gradient: LinearGradient(
                                         colors: [
                                           Theme.of(context).colorScheme.primary
-                                              .withOpacity(0.7),
+                                              .withValues(alpha: 0.7),
                                           Theme.of(context).colorScheme.primary,
                                         ],
                                         begin: Alignment.bottomCenter,
