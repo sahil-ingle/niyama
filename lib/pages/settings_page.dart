@@ -29,34 +29,90 @@ class _SettingsPageState extends State<SettingsPage> {
   final _nameController = TextEditingController();
 
   void changeSeedColor() {
+    Color tempColor = selectedColor; // Temporary color for live preview
+
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text("Select Color"),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: selectedColor,
-            onColorChanged: (pickerColor) {
-              setState(() {
-                selectedColor = pickerColor;
-              });
-            },
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setStateDialog) => AlertDialog(
+          title: const Text(
+            "Select Color",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ),
-        actions: [
-          MyElevatedBtn(
-            fixedSize: Size(double.infinity, 52),
-            text: "Done",
-            onTap: () {
-              myThemeColor.put("color", selectedColor.value);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('To see effect Reset the App')),
-              );
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Color preview
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: tempColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                ),
+                const SizedBox(height: 12), // adjusted spacing
+                // Color picker
+                ColorPicker(
+                  pickerColor: tempColor,
+                  onColorChanged: (color) {
+                    setStateDialog(() {
+                      tempColor = color; // Live preview
+                    });
+                  },
+                  enableAlpha: false,
+                  pickerAreaHeightPercent: 0.6, // slightly smaller for balance
+                  displayThumbColor: true,
 
-              Navigator.of(ctx).pop();
-            },
+                  paletteType: PaletteType.hsvWithHue,
+                ),
+                const SizedBox(height: 12), // consistent spacing
+                // Preset colors
+                SizedBox(
+                  height: 52,
+                  child: BlockPicker(
+                    pickerColor: tempColor,
+                    availableColors: [
+                      Colors.green, // Enreld green
+                      Colors.lightBlue, // Sky blue
+                      Colors.yellow, // Yellow
+                      Colors.pink, // Pinky
+                    ],
+                    onColorChanged: (color) {
+                      setStateDialog(() {
+                        tempColor = color; // Update preview
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+          actionsPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          actions: [
+            MyElevatedBtn(
+              fixedSize: const Size(double.infinity, 52),
+              text: "Done",
+              onTap: () {
+                setState(() {
+                  selectedColor = tempColor; // Apply to main state
+                });
+                myThemeColor.put("color", selectedColor.value);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('To see effect, reset the app')),
+                );
+
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
