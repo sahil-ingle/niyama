@@ -16,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   Box<String> myProfile = Hive.box<String>('profile');
+  Box<bool> authBox = Hive.box<bool>('auth');
   late Box<int> myThemeColor;
   late Color selectedColor;
 
@@ -150,6 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    bool isAuthEnabled = authBox.get('isAuthEnabled', defaultValue: false)!;
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -221,6 +223,48 @@ class _SettingsPageState extends State<SettingsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                              "Theme Color",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Text(
+                              "Change the look of your \napp ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        MyElevatedBtn(
+                          text: "Select",
+                          onTap: changeSeedColor,
+                          fixedSize: Size(100, 52),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 8),
+
+                  Divider(indent: 20, endIndent: 20),
+
+                  SizedBox(height: 8),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               "Theme",
                               style: TextStyle(
                                 fontSize: 20,
@@ -253,6 +297,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   ),
+
                   SizedBox(height: 8),
 
                   Divider(indent: 20, endIndent: 20),
@@ -267,7 +312,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Theme Color",
+                              "Biometric Lock",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -275,7 +320,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             Text(
-                              "Change the look of your \napp ",
+                              "Add Applock to secure \nyour Habits",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(
@@ -286,10 +331,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           ],
                         ),
                         Spacer(),
-                        MyElevatedBtn(
-                          text: "Select",
-                          onTap: changeSeedColor,
-                          fixedSize: Size(100, 52),
+                        Switch(
+                          value: isAuthEnabled,
+                          onChanged: (value) {
+                            setState(() {
+                              isAuthEnabled = value;
+                              authBox.put('isAuthEnabled', value);
+                            });
+                          },
                         ),
                       ],
                     ),

@@ -384,88 +384,111 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 28,
+                      top: 12,
                       bottom: 12,
-                      left: 12,
-                      right: 28,
+                      left: 16,
+                      right: 12,
                     ),
-                    child: BarChart(
-                      BarChartData(
-                        minY: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            "Weekly Chart",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer
+                                  .withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ),
 
-                        gridData: FlGridData(
-                          show: true,
-                          drawHorizontalLine: true,
-                        ),
-                        borderData: FlBorderData(show: false),
-                        barTouchData: BarTouchData(
-                          enabled: true,
-                          touchTooltipData: BarTouchTooltipData(
-                            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                              return BarTooltipItem(
-                                '${dates[groupIndex]}\n${rod.toY.toStringAsFixed(1)} mins',
-                                const TextStyle(color: Colors.black),
-                              );
-                            },
-                          ),
-                        ),
-                        titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (value, meta) {
-                                int index = value.toInt();
-                                if (index < 0 || index >= dates.length)
-                                  return const SizedBox();
-                                return Text(
-                                  dates[index],
-                                  style: const TextStyle(fontSize: 12),
-                                );
-                              },
-                              reservedSize: 32,
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 5,
-                              getTitlesWidget: (value, meta) => Text(
-                                '${value.toInt()}m',
-                                style: const TextStyle(fontSize: 12),
+                        Expanded(
+                          child: BarChart(
+                            BarChartData(
+                              minY: 0,
+
+                              gridData: FlGridData(
+                                show: true,
+                                drawHorizontalLine: true,
                               ),
-                              reservedSize: 40,
-                            ),
-                          ),
-                          topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                        ),
-                        barGroups: List.generate(timeUtilized.length, (index) {
-                          return BarChartGroupData(
-                            x: index,
-                            barRods: [
-                              BarChartRodData(
-                                toY: timeUtilized[index],
-                                width: 20,
-                                borderRadius: BorderRadius.circular(4),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Theme.of(
-                                      context,
-                                    ).colorScheme.primary.withOpacity(0.7),
-                                    Theme.of(context).colorScheme.primary,
-                                  ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
+                              borderData: FlBorderData(show: false),
+                              barTouchData: BarTouchData(
+                                enabled: true,
+                                touchTooltipData: BarTouchTooltipData(
+                                  getTooltipItem:
+                                      (group, groupIndex, rod, rodIndex) {
+                                        return BarTooltipItem(
+                                          '${dates[groupIndex]}\n${rod.toY.toStringAsFixed(1)} mins',
+                                          const TextStyle(color: Colors.black),
+                                        );
+                                      },
                                 ),
                               ),
-                            ],
-                          );
-                        }),
-                      ),
+                              titlesData: FlTitlesData(
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, meta) {
+                                      int index = value.toInt();
+                                      if (index < 0 || index >= dates.length)
+                                        return const SizedBox();
+                                      return Text(
+                                        dates[index],
+                                        style: const TextStyle(fontSize: 12),
+                                      );
+                                    },
+                                    reservedSize: 32,
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: 5,
+                                    getTitlesWidget: (value, meta) => Text(
+                                      '${value.toInt()}m',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    reservedSize: 40,
+                                  ),
+                                ),
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                              ),
+                              barGroups: List.generate(timeUtilized.length, (
+                                index,
+                              ) {
+                                return BarChartGroupData(
+                                  x: index,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: timeUtilized[index],
+                                      width: 20,
+                                      borderRadius: BorderRadius.circular(4),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Theme.of(context).colorScheme.primary
+                                              .withOpacity(0.7),
+                                          Theme.of(context).colorScheme.primary,
+                                        ],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
