@@ -110,6 +110,23 @@ class HomePage extends StatelessWidget {
     return heatmap;
   }
 
+  int getTotalTimeUtilized() {
+    int totalCompletedSecond = 0;
+    List<int> values = [];
+
+    for (int i = 0; i < boxHabit.length; i++) {
+      Habit myHabit = boxHabit.getAt(i);
+      List<int> addValue = myHabit.streakDates.values.toList();
+      values += addValue;
+    }
+
+    for (int value in values) {
+      totalCompletedSecond += value;
+    }
+
+    return (totalCompletedSecond / 60).toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -296,6 +313,76 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 16, top: 4),
+              child: Text(
+                "Milestones",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            Card(
+              elevation: 4,
+              margin: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 8,
+                bottom: 16,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 16,
+                ),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Time Spend on Habits",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer
+                                .withValues(alpha: 0.5),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.timer,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 28,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "${getTotalTimeUtilized()} Minutes",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ],

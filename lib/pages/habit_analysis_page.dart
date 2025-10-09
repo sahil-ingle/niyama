@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:niyama/models/habit.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class HabitAnalysisPage extends StatefulWidget {
   const HabitAnalysisPage({required this.myHabit, super.key});
@@ -90,6 +91,9 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
         ? allValues.sublist(allValues.length - 5)
         : allValues;
 
+    final double percent =
+        widget.myHabit.currentStreak / widget.myHabit.goalDays;
+
     // Convert them to desired formats
     final List<String> dates = latestDates.map(formatDate).toList();
     final List<double> timeUtilized = latestValues
@@ -117,25 +121,71 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
           ),
           SliverList.list(
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 16.0,
-              //     vertical: 8.0,
-              //   ),
-              //   child: Text(
-              //     "Heat Map",
-              //     style: TextStyle(
-              //       fontSize: 20,
-              //       fontWeight: FontWeight.bold,
-              //       color: Theme.of(context).colorScheme.onSurface,
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 16),
+              Expanded(
+                child: Card(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Progress Over Goal',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer
+                                .withValues(alpha: 0.7),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.myHabit.currentStreak} / ${widget.myHabit.goalDays} days',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+
+                            LinearPercentIndicator(
+                              barRadius: const Radius.circular(16),
+                              lineHeight: 12,
+                              animation: true,
+                              animationDuration: 400,
+                              animateFromLastPercent: true,
+                              percent: percent,
+                              padding: EdgeInsets.zero,
+                              progressColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer
+                                  .withValues(alpha: 0.1),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 8),
 
               Card(
                 elevation: 4,
-                margin: EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
 
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -343,18 +393,47 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                       BarChartData(
                         minY: 0,
 
-                        gridData: FlGridData(show: false),
-                        borderData: FlBorderData(show: false),
-
-                        titlesData: FlTitlesData(
+                        gridData: FlGridData(
                           show: true,
-
+                          drawHorizontalLine: true,
+                        ),
+                        borderData: FlBorderData(show: false),
+                        barTouchData: BarTouchData(
+                          enabled: true,
+                          touchTooltipData: BarTouchTooltipData(
+                            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                              return BarTooltipItem(
+                                '${dates[groupIndex]}\n${rod.toY.toStringAsFixed(1)} mins',
+                                const TextStyle(color: Colors.black),
+                              );
+                            },
+                          ),
+                        ),
+                        titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              getTitlesWidget: (double value, TitleMeta meta) {
-                                return Text(dates[value.toInt()]);
+                              getTitlesWidget: (value, meta) {
+                                int index = value.toInt();
+                                if (index < 0 || index >= dates.length)
+                                  return const SizedBox();
+                                return Text(
+                                  dates[index],
+                                  style: const TextStyle(fontSize: 12),
+                                );
                               },
+                              reservedSize: 32,
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 5,
+                              getTitlesWidget: (value, meta) => Text(
+                                '${value.toInt()}m',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              reservedSize: 40,
                             ),
                           ),
                           topTitles: AxisTitles(
@@ -364,17 +443,24 @@ class _HabitAnalysisPageState extends State<HabitAnalysisPage> {
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),
-
                         barGroups: List.generate(timeUtilized.length, (index) {
                           return BarChartGroupData(
                             x: index,
                             barRods: [
                               BarChartRodData(
                                 toY: timeUtilized[index],
-
-                                color: Theme.of(context).colorScheme.primary,
                                 width: 20,
                                 borderRadius: BorderRadius.circular(4),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withOpacity(0.7),
+                                    Theme.of(context).colorScheme.primary,
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
                               ),
                             ],
                           );
