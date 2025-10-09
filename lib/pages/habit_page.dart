@@ -92,41 +92,83 @@ class _HabitPageState extends State<HabitPage> {
   void _startTimer(int index) {
     Habit myHabit = boxHabit.getAt(index);
 
-    // Cancel any existing timer
+    if (myHabit.isCompleted) return;
+
+    // Cancel any existing scheduled notification
+    NotiService().cancelNotification(index + 28);
+
+    // If just started or resumed, set start time
+    myHabit.lastStartTime ??= DateTime.now().millisecondsSinceEpoch;
+    myHabit.isPaused = false;
+    myHabit.save();
+
+    // Schedule completion notification
+    final remainingSeconds = myHabit.timeAllocated - myHabit.timeUtilized;
+    NotiService().scheduleNotification(
+      id: index + 28,
+      title: 'Habit "${myHabit.habitName}" Completed!',
+      body: 'You have successfully reached your habit goal time.',
+      duration: Duration(seconds: remainingSeconds),
+    );
+
     _timers[index]?.cancel();
 
-    _timers[index] = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (myHabit.timeUtilized < myHabit.timeAllocated &&
-          !myHabit.isCompleted) {
-        myHabit.timeUtilized++;
-        myHabit.save();
-        setState(
-          () {},
-        ); // Only triggers UI update without mutating the object here
-      } else {
+    _timers[index] = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final elapsed = ((now - (myHabit.lastStartTime ?? now)) / 1000).floor();
+
+      int totalUsed = myHabit.timeUtilized + elapsed;
+
+      if (totalUsed >= myHabit.timeAllocated) {
+        myHabit.timeUtilized = myHabit.timeAllocated;
         myHabit.isCompleted = true;
         myHabit.isPaused = false;
+        myHabit.lastStartTime = null;
         myHabit.save();
 
-        if (myHabit.timeUtilized == myHabit.timeAllocated) {
-          increaseDayCount(index, myHabit.timeUtilized);
-        }
+        increaseDayCount(index, myHabit.timeUtilized);
 
+        // Cancel timer + notification when done
+        NotiService().cancelNotification(index + 28);
         _timers[index]?.cancel();
-      }
-    });
 
-    setState(() {
-      myHabit.isPaused = false;
+        setState(() {});
+      } else {
+        setState(() {
+          myHabit.timeUtilized = totalUsed;
+        });
+      }
     });
   }
 
   void _pauseTimer(int index) {
     Habit myHabit = boxHabit.getAt(index);
 
+    if (myHabit.lastStartTime != null) {
+      final elapsed =
+          ((DateTime.now().millisecondsSinceEpoch - myHabit.lastStartTime!) /
+                  1000)
+              .floor();
+      myHabit.timeUtilized += elapsed;
+    }
+
+    if (myHabit.timeUtilized >= myHabit.timeAllocated) {
+      myHabit.timeUtilized = myHabit.timeAllocated;
+      myHabit.isCompleted = true;
+      myHabit.isPaused = false;
+      myHabit.lastStartTime = null;
+      increaseDayCount(index, myHabit.timeUtilized);
+    } else {
+      myHabit.isPaused = true;
+      myHabit.lastStartTime = null;
+    }
+
     _timers[index]?.cancel();
-    myHabit.isPaused = true;
     myHabit.save();
+
+    // Cancel scheduled notification when paused
+    NotiService().cancelNotification(index + 28);
+
     setState(() {});
   }
 

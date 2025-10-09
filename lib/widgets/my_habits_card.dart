@@ -167,7 +167,9 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                     ? Row(
                         children: [
                           Text(
-                            _formatTime(widget.dislayTime),
+                            widget.myHabit.isCompleted
+                                ? "Completed"
+                                : _formatTime(widget.dislayTime),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -177,14 +179,17 @@ class _MyHabitsCardState extends State<MyHabitsCard> {
                           const SizedBox(width: 8),
 
                           /// Play / Pause Button
-                          GestureDetector(
-                            onTap: widget.btnPlayPause,
-                            child: Icon(
-                              widget.isPaused
-                                  ? FontAwesome.circle_pause_solid
-                                  : FontAwesome.circle_play_solid,
-                              color: colorScheme.primary,
-                              size: 28,
+                          Visibility(
+                            visible: !widget.myHabit.isCompleted,
+                            child: GestureDetector(
+                              onTap: widget.btnPlayPause,
+                              child: Icon(
+                                widget.isPaused
+                                    ? FontAwesome.circle_pause_solid
+                                    : FontAwesome.circle_play_solid,
+                                color: colorScheme.primary,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ],

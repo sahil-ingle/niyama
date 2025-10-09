@@ -255,56 +255,62 @@ class _HabitEditPageState extends State<HabitEditPage> {
                   // ----------------------------
                   // Duration Picker
                   // ----------------------------
-                  Expanded(
-                    child: Card(
-                      color: isDarkMode
-                          ? Theme.of(context).colorScheme.secondaryContainer
-                          : Theme.of(context).colorScheme.surface,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      margin: EdgeInsets.all(0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 14,
+                  Visibility(
+                    visible: isPositive,
+                    child: Expanded(
+                      child: Card(
+                        color: isDarkMode
+                            ? Theme.of(context).colorScheme.secondaryContainer
+                            : Theme.of(context).colorScheme.surface,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: TimePickerSpinnerPopUp(
-                          initTime: _timePicked,
-                          mode: CupertinoDatePickerMode.time,
-                          onChange: (dateTime) {
-                            setState(() => _timePicked = dateTime);
-                          },
-                          timeWidgetBuilder: (dateTime) {
-                            final formattedTime =
-                                _timePicked.hour == 0 && _timePicked.minute == 0
-                                ? "Duration"
-                                : _timePicked.hour == 0
-                                ? "${_timePicked.minute} Min"
-                                : "${_timePicked.hour} Hr ${_timePicked.minute} Min";
+                        margin: EdgeInsets.all(0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 14,
+                          ),
+                          child: TimePickerSpinnerPopUp(
+                            initTime: _timePicked,
+                            mode: CupertinoDatePickerMode.time,
+                            onChange: (dateTime) {
+                              setState(() => _timePicked = dateTime);
+                            },
+                            timeWidgetBuilder: (dateTime) {
+                              final formattedTime =
+                                  _timePicked.hour == 0 &&
+                                      _timePicked.minute == 0
+                                  ? "Duration"
+                                  : _timePicked.hour == 0
+                                  ? "${_timePicked.minute} Min"
+                                  : "${_timePicked.hour} Hr ${_timePicked.minute} Min";
 
-                            return Center(
-                              child: Text(
-                                formattedTime,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: isDarkMode
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.onSecondaryContainer
-                                      : Theme.of(context).colorScheme.onSurface,
+                              return Center(
+                                child: Text(
+                                  formattedTime,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: isDarkMode
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSecondaryContainer
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
 
-                  SizedBox(width: 12),
+                  Visibility(visible: isPositive, child: SizedBox(width: 12)),
 
                   // ----------------------------
                   // Reminder Time Picker

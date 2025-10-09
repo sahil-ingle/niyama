@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:niyama/models/habit.dart';
@@ -25,6 +26,8 @@ void main() async {
   await Hive.openBox<bool>('isDarkTheme');
   boxToDo = await Hive.openBox<String>('to-do');
   await Hive.openBox<int>('themeColor');
+
+  await AndroidAlarmManager.initialize();
 
   NotiService().initNotification();
   runApp(const MainApp());

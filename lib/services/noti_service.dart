@@ -1,6 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tzData;
 
 class NotiService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -68,43 +67,37 @@ class NotiService {
     return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
-  Future<void> showNotificationAtTime({
-    int id = 0,
-    String? title,
-    String? body,
-    required int hour,
-    required int minute,
+  Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required Duration duration,
   }) async {
-    // Initialize timezone data
-    tzData.initializeTimeZones();
-    final now = tz.TZDateTime.now(tz.local);
-
-    // Schedule for today at the given hour and minute
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      hour,
-      minute,
-    );
-
-    // If the scheduled time has already passed today, optionally schedule for tomorrow
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(Duration(days: 1));
-    }
+    final scheduledTime = tz.TZDateTime.now(tz.local).add(duration);
+    print('Scheduling notification at: $scheduledTime');
 
     await notificationsPlugin.zonedSchedule(
       id,
       title,
       body,
-      scheduledDate,
-      notificationDetails(),
-
-      matchDateTimeComponents: DateTimeComponents.time,
-      androidScheduleMode: AndroidScheduleMode
-          .exactAllowWhileIdle, // Optional: repeat daily at same time
+      scheduledTime,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'habit_channel',
+          'Habit Timer',
+          channelDescription: 'Notifications for habit timers',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(), // optional
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      // uiLocalNotificationDateInterpretation removed in v19+
     );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await notificationsPlugin.cancel(id);
   }
 
   Future<void> sheduleToDo({
