@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 final Box<int> myThemeColor = Hive.box<int>('themeColor');
-final Color mySeedColor = Color(
-  myThemeColor.get("color") ?? Colors.green.value,
-);
+final Color mySeedColor = Color(myThemeColor.get("color") ?? Colors.blue.value);
 
 /// light Color Scheme
 final kColorSchemeLight = ColorScheme.fromSeed(
-  seedColor: Colors.blue,
+  seedColor: mySeedColor,
   brightness: Brightness.light, // Ensures light-appropriate colors
 );
 

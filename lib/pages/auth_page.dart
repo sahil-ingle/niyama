@@ -13,6 +13,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final LocalAuthentication _auth = LocalAuthentication();
   bool _canCheckBiometrics = false;
+  bool _isAuthenticating = false;
   String _status = 'Checking biometrics...';
 
   @override
@@ -21,24 +22,43 @@ class _AuthPageState extends State<AuthPage> {
     _initAuth();
   }
 
+  /// Initialize authentication capability
   Future<void> _initAuth() async {
     try {
-      bool canCheck = await _auth.isDeviceSupported();
-      setState(() => _canCheckBiometrics = canCheck);
+      final isSupported = await _auth.isDeviceSupported();
+      final canCheck = await _auth.canCheckBiometrics;
 
-      if (canCheck) {
-        _authenticate(); // Automatically start authentication
+      if (!mounted) return;
+
+      if (isSupported && canCheck) {
+        setState(() {
+          _canCheckBiometrics = true;
+          _status = 'Ready to authenticate';
+        });
+
+        // Small delay so UI renders before auth prompt
+        await Future.delayed(const Duration(milliseconds: 400));
+
+        if (mounted) _authenticate();
       } else {
         setState(() => _status = 'Biometric authentication not available');
       }
     } catch (e) {
-      setState(() => _status = 'Error: $e');
+      if (mounted) setState(() => _status = 'Error: $e');
     }
   }
 
+  /// Perform biometric authentication
   Future<void> _authenticate() async {
+    if (_isAuthenticating) return;
+
+    setState(() {
+      _isAuthenticating = true;
+      _status = 'Authenticating...';
+    });
+
     try {
-      bool authenticated = await _auth.authenticate(
+      final authenticated = await _auth.authenticate(
         localizedReason: 'Please authenticate to continue',
         options: const AuthenticationOptions(
           biometricOnly: true,
@@ -46,51 +66,86 @@ class _AuthPageState extends State<AuthPage> {
         ),
       );
 
+      if (!mounted) return;
+
       if (authenticated) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const NavigationPage()),
-        );
+        setState(() => _status = 'Authenticated successfully');
+        await Future.delayed(const Duration(milliseconds: 400));
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const NavigationPage()),
+          );
+        }
       } else {
-        setState(() => _status = 'Authentication Failed');
+        setState(() => _status = 'Authentication cancelled or failed');
       }
     } catch (e) {
-      setState(() => _status = 'Error: $e');
+      if (mounted) setState(() => _status = 'Error: $e');
+    } finally {
+      if (mounted) setState(() => _isAuthenticating = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Center(
-        child: _canCheckBiometrics
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    FontAwesome.lock_solid,
-                    size: 32,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _status,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              )
-            : Text(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: Column(
+            key: ValueKey(_status),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesome.lock_solid,
+                size: 52,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
                 _status,
                 style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 16,
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 24),
+
+              // Loading indicator when authenticating
+              if (_isAuthenticating)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+
+              // Retry button when not authenticating and biometrics supported
+              if (!_isAuthenticating && _canCheckBiometrics)
+                ElevatedButton.icon(
+                  onPressed: _authenticate,
+                  icon: const Icon(Icons.fingerprint),
+                  label: const Text('Authenticate'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+
+              // Show retry only on errors
+              if (_status.startsWith('Error'))
+                TextButton(onPressed: _initAuth, child: const Text('Retry')),
+            ],
+          ),
+        ),
       ),
     );
   }
